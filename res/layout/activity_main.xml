@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    tools:context=".MainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/g3mWidgetHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        >
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/buttonSlide"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/whitetransparent"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/menu_gris" />
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/buttonTypeCatre"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/whitetransparent"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/glob2d" />
+
+        <ImageButton
+            android:id="@+id/buttonTypeView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/whitetransparent"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/select_menu" />
+    </LinearLayout>
+
+</RelativeLayout>

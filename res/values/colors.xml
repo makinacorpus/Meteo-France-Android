@@ -1,0 +1,17 @@
+<resources>
+
+    <color name="navigation_bg">#bb000000</color>
+    <color name="g3mGreenLight">#a4c035</color>
+    <color name="g3mGreenDark">#7a8e27</color>
+    <color name="yellowIberia">#eaaf00</color>
+    <!-- Color For Menu -->
+    <color name="soleilcolor">#72cbf0</color>
+    <color name="whitetransparent">#40FFFFFF</color>
+    <color name="nuagecolor">#68c0e5</color>
+    <color name="oragecolor">#3ea7ce</color>
+    <color name="pluiecolor">#42a2d4</color>
+    <color name="ventcolor">#2b91c6</color>
+    <color name="neigecolor">#1177ac</color>
+    <color name="tmpcolor"> #006498</color>
+
+</resources>

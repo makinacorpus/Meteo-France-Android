@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="actions_icons">
+        <item>@drawable/soleil</item>
+        <item>@drawable/nuage</item>
+        <item>@drawable/orage</item>
+        <item>@drawable/pluie</item>
+        <item>@drawable/vents</item>
+        <item>@drawable/neige</item>
+        <item>@drawable/temperature</item>
+    </array>
+
+    <string-array name="actions_names">
+        <item>@string/ensoleille_name</item>
+        <item>@string/couverture_name</item>
+        <item>@string/orage_name</item>
+        <item>@string/rsiquepluise_name</item>
+        <item>@string/vent_name</item>
+        <item>@string/neige_name</item>
+        <item>@string/temperature_name</item>
+    </string-array>
+    <string-array name="actions_color">
+        <item>@color/soleilcolor</item>
+        <item>@color/nuagecolor</item>
+        <item>@color/oragecolor</item>
+        <item>@color/pluiecolor</item>
+        <item>@color/ventcolor</item>
+        <item>@color/neigecolor</item>
+        <item>@color/tmpcolor</item>
+    </string-array>
+
+</resources>

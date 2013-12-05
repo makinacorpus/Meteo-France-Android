@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MeteoFrance</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Pour le menu de gauche -->
+    <string name="ensoleille_name">Ensoleillé</string>
+    <string name="couverture_name">Couverture nuageuse</string>
+    <string name="orage_name">Orages</string>
+    <string name="rsiquepluise_name">Risques de pluie</string>
+    <string name="vent_name">Vents</string>
+    <string name="neige_name">Neige</string>
+    <string name="temperature_name">Température</string>
+    <string name="type_view">Vue</string>
+    <string name="type_view_satellite">Satellite</string>
+    <string name="type_view_traffic">Traffic</string>
+     <string name="token_error">Erruer de récupération de token.Vuillez vérifier votre connexion internet SVP.</string>
+
+</resources>
