@@ -9,8 +9,7 @@
         android:id="@+id/g3mWidgetHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
-        >
+        android:background="@android:color/black" >
     </RelativeLayout>
 
     <ImageButton
@@ -45,6 +44,16 @@
             android:background="@color/whitetransparent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/select_menu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="50dp"
+        android:id="@+id/layoutContainerImage"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical" >
     </LinearLayout>
 
 </RelativeLayout>

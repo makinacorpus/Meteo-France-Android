@@ -92,7 +92,7 @@ public class ActionsAdapter extends BaseAdapter {
 
 	
 		  TextView text = (TextView) convertView
-					.findViewById(android.R.id.text1);
+					.findViewById(R.id.textLayer);
 		
 
 		final Drawable icon = convertView.getContext().getResources()
@@ -105,7 +105,7 @@ public class ActionsAdapter extends BaseAdapter {
 		convertView.setBackgroundDrawable(new ColorDrawable(convertView.getResources().getColor(mColor[position])));
 		convertView.setTag(mTitles[position]);
 		
-		
+		convertView.setEnabled(false);
 		return convertView;
 		}
 		else {

@@ -2,6 +2,7 @@ package com.makinacorpus.meteofrance;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -27,10 +28,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
@@ -50,6 +56,8 @@ public class MainActivity extends RoboActivity {
 	ImageButton buttonGlobeType;
 	@InjectView(R.id.buttonTypeView)
 	ImageButton buttonViewtype;
+	@InjectView(R.id.layoutContainerImage)
+	LinearLayout layoutContainer;
 	private ListView listSliding;
 	private static final int idTraffic = 2;
 	private static final int idSatellite = 1;
@@ -135,13 +143,42 @@ public class MainActivity extends RoboActivity {
 							final Layer layerToAdd = layerset
 									.getLayerByTitle((String) view.getTag());
 							if (layerToAdd != null) {
+								TextView txtContainer = (TextView) view
+										.findViewById(R.id.textLayer);
+
+								Drawable[] drawablesCoumpounds = txtContainer
+										.getCompoundDrawables();
+
 								if (!layerToAdd.isEnable()) {
+									ImageView imagetoAdd;
+									imagetoAdd = new ImageView(view
+											.getContext());
+									imagetoAdd
+											.setImageDrawable(drawablesCoumpounds[0]);
+									imagetoAdd
+											.setLayoutParams(new LayoutParams(
+													LayoutParams.WRAP_CONTENT,
+													LayoutParams.WRAP_CONTENT));
+									imagetoAdd.setTag((String) view.getTag());
+									layoutContainer.addView(imagetoAdd);
+
 									layerToAdd.setEnable(true);
 
-								} else
-									layerToAdd.setEnable(false);
-							}
+								} else {
 
+									layerToAdd.setEnable(false);
+									ArrayList<View> viewAll = getViewsByTag(layoutContainer);
+									for (View view2 : viewAll) {
+										if (view2.getTag().equals(
+												(String) view.getTag())) {
+											layoutContainer.removeView(view2);
+											break;
+										}
+
+									}
+
+								}
+							}
 						}
 					}
 				});
@@ -150,21 +187,22 @@ public class MainActivity extends RoboActivity {
 		if (Utils.isNetworkConnected(activityContext)) {
 			TokenTask getTokenTask = new TokenTask();
 			getTokenTask.execute();
-		}else{
-			if(!Utils.settings.getString("token", "").equals("")){
-				
-		
-			layerset = SimpleRasterLayerBuilder.createLayerset(Utils.settings.getString("token", ""),activityContext);
-			builder = new G3MBuilder_Android(activityContext);
+		} else {
+			if (!Utils.settings.getString("token", "").equals("")) {
 
-			builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				layerset = SimpleRasterLayerBuilder.createLayerset(
+						Utils.settings.getString("token", ""), activityContext);
+				builder = new G3MBuilder_Android(activityContext);
 
-			_g3mWidget = builder.createWidget();
-		
-			_g3mWidget.setBackgroundColor(activityContext.getResources().getColor(R.color.whitetransparent));
-			_placeHolder.addView(_g3mWidget);
-			
-			}else{
+				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+
+				_g3mWidget = builder.createWidget();
+
+				_g3mWidget.setBackgroundColor(activityContext.getResources()
+						.getColor(R.color.whitetransparent));
+				_placeHolder.addView(_g3mWidget);
+
+			} else {
 				Toast.makeText(activityContext, R.string.token_error,
 						Toast.LENGTH_LONG).show();
 			}
@@ -185,7 +223,7 @@ public class MainActivity extends RoboActivity {
 						.getJSONObject("results").getJSONObject("postresult")
 						.getString("p");
 				tokenToUse = (new JSONObject(inner_json)).getString("token");
-				Log.i("token",tokenToUse);
+				Log.i("token", tokenToUse);
 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -228,10 +266,22 @@ public class MainActivity extends RoboActivity {
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 
 			_g3mWidget = builder.createWidget();
-			_g3mWidget.setBackgroundColor(activityContext.getResources().getColor(R.color.whitetransparent));
-			
+			_g3mWidget.setBackgroundColor(activityContext.getResources()
+					.getColor(R.color.whitetransparent));
 
 			_placeHolder.addView(_g3mWidget);
 		}
+	}
+
+	private static ArrayList<View> getViewsByTag(ViewGroup root) {
+		ArrayList<View> views = new ArrayList<View>();
+		final int childCount = root.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			final View child = root.getChildAt(i);
+
+			views.add(child);
+
+		}
+		return views;
 	}
 }
