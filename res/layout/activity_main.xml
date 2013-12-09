@@ -47,118 +47,47 @@
             android:src="@drawable/select_menu" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/timeSelector"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+
+   	<RelativeLayout
+    	android:id="@+id/timeSelector"
+	    android:layout_width="match_parent"
+	    android:layout_height="100dp"
+	    android:background="#7fd7fc"
+        android:layout_gravity="bottom"
         android:baselineAligned="false"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:background="#7fd7fc"
-            android:layout_gravity="bottom"
-            android:baselineAligned="false"
-            android:orientation="horizontal" >
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center"
-                 >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:text="@string/matinee"
-                    android:textColor="@color/bleu_matin" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="6dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/bleu_matin" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:background="@android:color/white"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center"
-             >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:paddingBottom="15dp"
-                    android:text="@string/apresmidi"
-                    android:textColor="@android:color/white" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="6dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/bleu_matin"
-                    android:visibility="gone" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:background="@android:color/white" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:text="@string/soir"
-                    android:textColor="@color/bleu_matin" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="6dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/bleu_matin" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/white"
-                    android:visibility="gone" />
-            </RelativeLayout>
-        </LinearLayout>
-    </LinearLayout>
-
+        android:layout_alignParentBottom="true"
+	    android:gravity="center">
+	    
+			<com.makinacorpus.meteofrance.ui.PagerContainer
+		    android:id="@+id/pager_container_day"
+		    android:layout_width="match_parent"
+		    android:layout_height="50dp"
+		    android:layout_alignParentTop="true"
+		    android:background="@drawable/images"
+		    >
+		
+			    <android.support.v4.view.ViewPager
+			        android:layout_width="150dp"
+			        android:layout_height="50dp"
+			        android:layout_gravity="center_horizontal" />
+		    
+			</com.makinacorpus.meteofrance.ui.PagerContainer>
+	    
+			<com.makinacorpus.meteofrance.ui.PagerContainer
+		    android:id="@+id/pager_container_time"
+		    android:layout_width="match_parent"
+		    android:layout_height="50dp"
+		    android:layout_below="@id/pager_container_day"
+		    android:background="@drawable/images" >
+		
+			    <android.support.v4.view.ViewPager
+			        android:layout_width="150dp"
+			        android:layout_height="50dp"
+			        android:layout_gravity="center_horizontal" />
+		    
+			</com.makinacorpus.meteofrance.ui.PagerContainer>
+	</RelativeLayout>
+  
     <LinearLayout
         android:id="@+id/layoutContainerImage"
         android:layout_width="50dp"

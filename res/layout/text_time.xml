@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView android:id="@+id/text_time_title"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:textColor="#FF00FF00"
+    	android:text="Title"
+    	android:gravity="center_horizontal"
+        />    
+        
+    <TextView android:id="@+id/text_time_summary"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:textColor="#FF0000FF"
+    	android:gravity="center_horizontal"
+    	android:text="Summary"
+        />    
+
+</LinearLayout>

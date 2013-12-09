@@ -27,11 +27,12 @@ import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,10 +48,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
+import com.makinacorpus.meteofrance.adapter.MyPagerAdapterDay;
+import com.makinacorpus.meteofrance.adapter.MyPagerAdapterTime;
+import com.makinacorpus.meteofrance.listener.ITextViewListener;
+import com.makinacorpus.meteofrance.ui.PagerContainer;
 import com.makinacorpus.meteofrance.ui.SimpleSideDrawer;
+import com.makinacorpus.meteofrance.ui.TextDayView;
+import com.makinacorpus.meteofrance.ui.TextTimeView;
 
 @SuppressLint("NewApi")
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity implements ITextViewListener {
 	private boolean is3dActivated = true;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
@@ -79,14 +86,20 @@ public class MainActivity extends RoboActivity {
 	@InjectResource(R.drawable.glob2d)
 	Drawable drawableVue;
 	private G3MWidget_Android _g3mWidget;
-	LayerSet layerset;
+	private LayerSet layerset;
 	G3MBuilder_Android builder;
 	@InjectView(R.id.g3mWidgetHolder)
 	RelativeLayout _placeHolder;
 
-	Angle latitudeA;
-	Angle longitudeA;
-
+	private Angle latitudeA;
+	private Angle longitudeA;
+	
+	private PagerContainer mContainerDay;
+	private PagerContainer mContainerTime;
+	
+	private MyPagerAdapterDay mPagerAdapterDay;
+	private MyPagerAdapterTime mPagerAdapterTime;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,7 +124,7 @@ public class MainActivity extends RoboActivity {
 
 			@Override
 			public void onClick(View v) {
-			
+
 			}
 		});
 
@@ -195,6 +208,35 @@ public class MainActivity extends RoboActivity {
 			}
 		}
 
+		mContainerDay = (PagerContainer) findViewById(R.id.pager_container_day);
+
+		ViewPager pager = mContainerDay.getViewPager();
+		mPagerAdapterDay = new MyPagerAdapterDay(this, this);
+		pager.setAdapter(mPagerAdapterDay);
+		// Necessary or the pager will only have one extra page to show
+		// make this at least however many pages you can see
+		pager.setOffscreenPageLimit(mPagerAdapterDay.getCount());
+		// A little space between pages
+		pager.setPageMargin(15);
+
+		// If hardware acceleration is enabled, you should also remove
+		// clipping on the pager for its children.
+		pager.setClipChildren(false);
+		
+		mContainerTime = (PagerContainer) findViewById(R.id.pager_container_time);
+		ViewPager pagerTime = mContainerTime.getViewPager();
+		mPagerAdapterTime = new MyPagerAdapterTime(this, this);
+		pagerTime.setAdapter(mPagerAdapterTime);
+		// Necessary or the pager will only have one extra page to show
+		// make this at least however many pages you can see
+		pagerTime.setOffscreenPageLimit(mPagerAdapterTime.getCount());
+		// A little space between pages
+		pagerTime.setPageMargin(15);
+
+		// If hardware acceleration is enabled, you should also remove
+		// clipping on the pager for its children.
+		pagerTime.setClipChildren(false);
+
 	}
 
 	private static void getToken() {
@@ -272,7 +314,6 @@ public class MainActivity extends RoboActivity {
 		return views;
 	}
 
-
 	public void bascilue2D3D() {
 		latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
 		longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
@@ -299,5 +340,14 @@ public class MainActivity extends RoboActivity {
 			}
 		});
 
+	}
+	
+	@Override
+	public void hasSelectedText(View v, int pos) {
+		if (v instanceof TextTimeView) {
+			mPagerAdapterTime.timesViewPager.setSelected((TextTimeView) v);
+		} else if (v instanceof TextDayView) {
+			mPagerAdapterDay.daysViewPager.setSelected((TextDayView) v);
+		}
 	}
 }
