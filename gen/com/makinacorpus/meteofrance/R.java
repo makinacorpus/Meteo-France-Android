@@ -16,8 +16,10 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int bleu_matin=0x7f05000c;
         public static final int g3mGreenDark=0x7f050002;
         public static final int g3mGreenLight=0x7f050001;
+        public static final int gris_selector=0x7f05000d;
         public static final int navigation_bg=0x7f050000;
         public static final int neigecolor=0x7f05000a;
         public static final int nuagecolor=0x7f050006;
@@ -44,53 +46,57 @@ public final class R {
     public static final class drawable {
         public static final int glob2d=0x7f020000;
         public static final int globe3d=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int menu_gris=0x7f020003;
-        public static final int neige=0x7f020004;
-        public static final int nuage=0x7f020005;
-        public static final int orage=0x7f020006;
-        public static final int panel_background=0x7f020007;
-        public static final int pluie=0x7f020008;
-        public static final int select_menu=0x7f020009;
-        public static final int soleil=0x7f02000a;
-        public static final int temperature=0x7f02000b;
-        public static final int vents=0x7f02000c;
+        public static final int ic_drawer=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int menu_gris=0x7f020004;
+        public static final int meteo_france=0x7f020005;
+        public static final int neige=0x7f020006;
+        public static final int nuage=0x7f020007;
+        public static final int orage=0x7f020008;
+        public static final int pluie=0x7f020009;
+        public static final int select_menu=0x7f02000a;
+        public static final int soleil=0x7f02000b;
+        public static final int temperature=0x7f02000c;
+        public static final int vents=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a000a;
-        public static final int buttonSlide=0x7f0a0001;
-        public static final int buttonTypeCatre=0x7f0a0002;
-        public static final int buttonTypeView=0x7f0a0003;
-        public static final int g3mWidgetHolder=0x7f0a0000;
-        public static final int header_title=0x7f0a0006;
-        public static final int icon=0x7f0a0004;
-        public static final int items=0x7f0a0007;
-        public static final int layoutslide=0x7f0a0008;
-        public static final int listSliding=0x7f0a0009;
-        public static final int title=0x7f0a0005;
+        public static final int content_frame=0x7f0a0002;
+        public static final int drawer_layout=0x7f0a0001;
+        public static final int drawer_list=0x7f0a0006;
+        public static final int g3mWidgetHolder=0x7f0a0003;
+        public static final int layoutContainerImage=0x7f0a0005;
+        public static final int satellite=0x7f0a0009;
+        public static final int selectViewCarte=0x7f0a0008;
+        public static final int switchViewItem=0x7f0a0007;
+        public static final int textLayer=0x7f0a0000;
+        public static final int timeSelector=0x7f0a0004;
+        public static final int traffic=0x7f0a000a;
     }
     public static final class layout {
         public static final int action_list_item=0x7f030000;
-        public static final int action_list_item_first=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int menu_list_item=0x7f030003;
-        public static final int popup_menu=0x7f030004;
-        public static final int slide_content_layout=0x7f030005;
+        public static final int activity_main=0x7f030001;
     }
     public static final class menu {
-        public static final int main=0x7f090000;
+        public static final int popup=0x7f090000;
     }
     public static final class string {
         public static final int action_settings=0x7f070001;
         public static final int app_name=0x7f070000;
+        public static final int apresmidi=0x7f07000f;
         public static final int couverture_name=0x7f070004;
+        public static final int drawer_close=0x7f070012;
+        public static final int drawer_open=0x7f070011;
         /**  Pour le menu de gauche 
          */
         public static final int ensoleille_name=0x7f070003;
         public static final int hello_world=0x7f070002;
+        /**  For hour selector 
+         */
+        public static final int matinee=0x7f07000e;
         public static final int neige_name=0x7f070008;
         public static final int orage_name=0x7f070005;
         public static final int rsiquepluise_name=0x7f070006;
+        public static final int soir=0x7f070010;
         public static final int temperature_name=0x7f070009;
         public static final int token_error=0x7f07000d;
         public static final int type_view=0x7f07000a;
@@ -125,5 +131,7 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        public static final int AppTheme_ActionBar_TitleTextStyle=0x7f080003;
+        public static final int AppTheme_ActionBarStyle=0x7f080002;
     }
 }
