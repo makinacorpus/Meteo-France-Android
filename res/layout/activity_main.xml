@@ -8,6 +8,7 @@
     <RelativeLayout
         android:id="@+id/g3mWidgetHolder"
         android:layout_width="match_parent"
+         tools:context=".CameraAnimation" 
         android:layout_height="match_parent"
         android:background="@android:color/black" >
     </RelativeLayout>
@@ -49,21 +50,16 @@
     <LinearLayout
         android:id="@+id/timeSelector"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:baselineAligned="false"
         android:orientation="vertical" >
-
-        <com.makinacorpus.meteofrance.ui.HorizontalListView
-            android:id="@+id/listview"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:background="#363835" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:background="#7fd7fc"
+            android:layout_gravity="bottom"
             android:baselineAligned="false"
             android:orientation="horizontal" >
 
@@ -73,7 +69,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:onClick="MatineSelector" >
+                 >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -104,7 +100,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:onClick="AMSelector" >
+             >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -136,7 +132,7 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:onClick="SoirSelector" >
+                >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -166,9 +162,10 @@
     <LinearLayout
         android:id="@+id/layoutContainerImage"
         android:layout_width="50dp"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/timeSelector"
         android:layout_alignParentRight="true"
+        android:background="@color/whitetransparent"
         android:gravity="bottom"
         android:orientation="vertical" >
     </LinearLayout>

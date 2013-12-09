@@ -11,8 +11,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.glob3.mobile.generated.Angle;
+import org.glob3.mobile.generated.Color;
+import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
 import org.glob3.mobile.generated.LayerSet;
+import org.glob3.mobile.generated.Planet;
 import org.glob3.mobile.specific.G3MBuilder_Android;
 import org.glob3.mobile.specific.G3MWidget_Android;
 import org.json.JSONException;
@@ -21,13 +25,16 @@ import org.json.JSONObject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -41,12 +48,13 @@ import android.widget.Toast;
 
 import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
 import com.makinacorpus.meteofrance.ui.SimpleSideDrawer;
-import com.u1aryz.android.lib.newpopupmenu.MenuItem;
-import com.u1aryz.android.lib.newpopupmenu.PopupMenu;
-import com.u1aryz.android.lib.newpopupmenu.PopupMenu.OnItemSelectedListener;
 
+@SuppressLint("NewApi")
 public class MainActivity extends RoboActivity {
+	private boolean is3dActivated = true;
 	static String tokenToUse = "";
+	private static final int to2DDistance = 10000;
+	private static final int to3DDistance = 25600000;
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 	private Context activityContext;
 	private SimpleSideDrawer mNav;
@@ -58,9 +66,13 @@ public class MainActivity extends RoboActivity {
 	ImageButton buttonViewtype;
 	@InjectView(R.id.layoutContainerImage)
 	LinearLayout layoutContainer;
+	@InjectResource(R.drawable.globe3d)
+	Drawable glob3Ddrawable;
+	@InjectResource(R.drawable.glob2d)
+	Drawable glob2Ddrawable;
+
 	private ListView listSliding;
-	private static final int idTraffic = 2;
-	private static final int idSatellite = 1;
+
 	@InjectResource(R.string.type_view)
 	String typeViewHeader;
 
@@ -71,22 +83,9 @@ public class MainActivity extends RoboActivity {
 	G3MBuilder_Android builder;
 	@InjectView(R.id.g3mWidgetHolder)
 	RelativeLayout _placeHolder;
-	private OnItemSelectedListener onselect = new OnItemSelectedListener() {
 
-		@Override
-		public void onItemSelected(MenuItem item) {
-			// TODO Auto-generated method stub
-			switch (item.getItemId()) {
-			case idSatellite:
-				break;
-
-			case idTraffic:
-
-				break;
-			}
-
-		}
-	};
+	Angle latitudeA;
+	Angle longitudeA;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +96,7 @@ public class MainActivity extends RoboActivity {
 		listSliding = (ListView) findViewById(R.id.listSliding);
 		listSliding.setAdapter(new ActionsAdapter(this));
 		activityContext = this;
+
 		buttonSlide.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -106,31 +106,15 @@ public class MainActivity extends RoboActivity {
 				buttonSlide.setVisibility(View.GONE);
 			}
 		});
-		buttonGlobeType.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-			}
-		});
 		buttonViewtype.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				PopupMenu menu = new PopupMenu(v.getContext());
-				menu.setHeaderTitle(typeViewHeader);
-				// Set Listener
-				menu.setOnItemSelectedListener(onselect);
-				// Add Menu (Android menu like style)
-				menu.add(idSatellite, R.string.type_view_satellite).setIcon(
-						drawableVue);
-				menu.add(idTraffic, R.string.type_view_traffic).setIcon(
-						drawableVue);
-
-				menu.show();
+			
 			}
 		});
+
 		listSliding
 				.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
 					@Override
@@ -199,11 +183,10 @@ public class MainActivity extends RoboActivity {
 				builder = new G3MBuilder_Android(activityContext);
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-
+				builder.setBackgroundColor(Color
+						.fromRGBA255(255, 255, 255, 255));
 				_g3mWidget = builder.createWidget();
 
-				_g3mWidget.setBackgroundColor(activityContext.getResources()
-						.getColor(R.color.whitetransparent));
 				_placeHolder.addView(_g3mWidget);
 
 			} else {
@@ -266,14 +249,14 @@ public class MainActivity extends RoboActivity {
 			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
 					activityContext);
 			builder = new G3MBuilder_Android(activityContext);
-
+			builder.setPlanet(Planet.createSphericalEarth());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
-
+			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+			bascilue2D3D();
 			_g3mWidget = builder.createWidget();
-			_g3mWidget.setBackgroundColor(activityContext.getResources()
-					.getColor(R.color.whitetransparent));
 
 			_placeHolder.addView(_g3mWidget);
+
 		}
 	}
 
@@ -289,16 +272,32 @@ public class MainActivity extends RoboActivity {
 		return views;
 	}
 
-	public void MatineSelector(View v) {
+
+	public void bascilue2D3D() {
+		latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
+		longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
+
+		buttonGlobeType.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(final View v) {
+
+				if (is3dActivated) {
+
+					is3dActivated = false;
+					buttonGlobeType.setImageDrawable(glob3Ddrawable);
+					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+							latitudeA, longitudeA, to2DDistance));
+
+				} else {
+					is3dActivated = true;
+					buttonGlobeType.setImageDrawable(glob2Ddrawable);
+					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+							latitudeA, longitudeA, to3DDistance));
+
+				}
+			}
+		});
 
 	}
-
-	public void AMSelector(View v) {
-
-	}
-
-	public void SoirSelector(View v) {
-
-	}
-
 }
