@@ -12,13 +12,13 @@
     <string name="rsiquepluise_name">Risques de pluie</string>
     <string name="vent_name">Vents</string>
     <string name="neige_name">Neige</string>
-    <string name="temperature_name">Température</string>
+    <string name="temperature_name">Températures</string>
     <string name="type_view">Vue</string>
     <string name="type_view_satellite">Satellite</string>
     <string name="type_view_traffic">Traffic</string>
-    <string name="token_error">Erruer de récupération de token.Vuillez vérifier votre connexion internet SVP.</string>
+    <string name="token_error">Erruer de récupération de token.Veuillez vérifier votre connexion internet SVP.</string>
     <!-- For hour selector -->
-    <string name="matinee">Matinéé\n8h-11h</string>
+    <string name="matinee">Matineé\n8h-11h</string>
     <string name="apresmidi">Après midi\n12h-17h</string>
     <string name="soir">Soir\n18h-22h</string>
 

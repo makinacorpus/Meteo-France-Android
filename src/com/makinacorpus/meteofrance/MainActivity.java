@@ -27,12 +27,12 @@ import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,6 +42,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,7 +112,19 @@ public class MainActivity extends RoboActivity {
 
 			@Override
 			public void onClick(View v) {
-			
+				PopupMenu popup = new PopupMenu(activityContext, v);
+				popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+
+				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+					public boolean onMenuItemClick(MenuItem item) {
+						Toast.makeText(MainActivity.this, item.getTitle(),
+								Toast.LENGTH_SHORT).show();
+						return true;
+					}
+				});
+
+				popup.show();
+
 			}
 		});
 
@@ -271,7 +284,6 @@ public class MainActivity extends RoboActivity {
 		}
 		return views;
 	}
-
 
 	public void bascilue2D3D() {
 		latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);

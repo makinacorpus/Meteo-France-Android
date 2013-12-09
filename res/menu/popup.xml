@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/satellite"
+        android:icon="@drawable/globe3d"
+        android:title="@string/type_view_satellite"/>
+    <item
+        android:id="@+id/traffic"
+        android:icon="@drawable/glob2d"
+        android:title="@string/type_view_traffic"/>
+   
+</menu>
