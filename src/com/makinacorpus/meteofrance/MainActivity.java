@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Color;
+import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
 import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Planet;
@@ -39,7 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -79,7 +79,6 @@ public class MainActivity extends RoboActivity {
 	@InjectResource(R.drawable.glob2d)
 	Drawable glob2Ddrawable;
 
-
 	@InjectResource(R.string.type_view)
 	String typeViewHeader;
 
@@ -114,7 +113,8 @@ public class MainActivity extends RoboActivity {
 			public void onDrawerOpened(View drawerView) {
 
 				invalidateOptionsMenu();
-				getActionBar().setTitle(getResources().getString(R.string.app_name));
+				getActionBar().setTitle(
+						getResources().getString(R.string.app_name));
 			}
 
 		};
@@ -122,9 +122,10 @@ public class MainActivity extends RoboActivity {
 		mDrawerList.setAdapter(new ActionsAdapter(this));
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("");
-		
-	
-		getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.whitetransparent)));
+
+		getActionBar().setBackgroundDrawable(
+				new ColorDrawable(getResources().getColor(
+						R.color.whitetransparent)));
 		// Enabling Up navigation
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		activityContext = this;
@@ -262,7 +263,6 @@ public class MainActivity extends RoboActivity {
 			builder.setPlanet(Planet.createSphericalEarth());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
-			bascilue2D3D();
 			_g3mWidget = builder.createWidget();
 
 			_placeHolder.addView(_g3mWidget);
@@ -282,33 +282,7 @@ public class MainActivity extends RoboActivity {
 		return views;
 	}
 
-	public void bascilue2D3D() {
-		latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
-		longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
 
-		// buttonGlobeType.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(final View v) {
-		//
-		// if (is3dActivated) {
-		//
-		// is3dActivated = false;
-		// buttonGlobeType.setImageDrawable(glob3Ddrawable);
-		// _g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-		// latitudeA, longitudeA, to2DDistance));
-		//
-		// } else {
-		// is3dActivated = true;
-		// buttonGlobeType.setImageDrawable(glob2Ddrawable);
-		// _g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-		// latitudeA, longitudeA, to3DDistance));
-		//
-		// }
-		// }
-		// });
-
-	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -321,6 +295,32 @@ public class MainActivity extends RoboActivity {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+		switch (item.getItemId()) {
+		case R.id.switchViewItem:
+			latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
+			longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
+
+			if (is3dActivated) {
+
+				is3dActivated = false;
+
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to2DDistance));
+				item.setIcon(glob3Ddrawable);
+
+			} else {
+				is3dActivated = true;
+
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to3DDistance));
+				item.setIcon(glob2Ddrawable);
+
+			}
+			break;
+
+		default:
+			break;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -328,7 +328,6 @@ public class MainActivity extends RoboActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// If the drawer is open, hide action items related to the content view
-		
 
 		return super.onPrepareOptionsMenu(menu);
 	}
