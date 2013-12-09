@@ -41,6 +41,7 @@ public class MyPagerAdapterDay extends PagerAdapter {
         	break;
         default:
         	view.setText("Today");
+        	view.setSelected();
         	break;
         }
         //view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50));

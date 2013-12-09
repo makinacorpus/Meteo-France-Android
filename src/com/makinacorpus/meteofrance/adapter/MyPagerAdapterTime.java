@@ -42,6 +42,7 @@ public class MyPagerAdapterTime extends PagerAdapter {
         	break;
         default:
         	view.setText("Morning", "8 - 11");
+        	view.setSelected();
         	break;
         }
         //view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50));
