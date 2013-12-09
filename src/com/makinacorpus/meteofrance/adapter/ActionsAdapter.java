@@ -82,10 +82,8 @@ public class ActionsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		if (convertView == null && position !=0) {
-			
-		
-			
+		if (convertView == null) 
+					
 			convertView = mInflater.inflate(R.layout.action_list_item, parent,
 					false);
 		
@@ -107,13 +105,8 @@ public class ActionsAdapter extends BaseAdapter {
 		
 		convertView.setEnabled(false);
 		return convertView;
-		}
-		else {
-			convertView = mInflater.inflate(R.layout.action_list_item_first, parent,false);
-			convertView.setTag("-1");
-					return convertView;
-		}
-				
 		
-	}
+		}
+		
+	
 }

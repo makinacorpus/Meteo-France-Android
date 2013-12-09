@@ -13,7 +13,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Color;
-import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
 import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Planet;
@@ -28,43 +27,51 @@ import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
-import com.makinacorpus.meteofrance.ui.SimpleSideDrawer;
 
 @SuppressLint("NewApi")
 public class MainActivity extends RoboActivity {
+	// Within which the entire activity is enclosed
+	@InjectView(R.id.drawer_layout)
+	private DrawerLayout mDrawerLayout;
+
+	// ListView represents Navigation Drawer
+	@InjectView(R.id.drawer_list)
+	private ListView mDrawerList;
+
+	// ActionBarDrawerToggle indicates the presence of Navigation Drawer in the
+	// action bar
+	private ActionBarDrawerToggle mDrawerToggle;
+
 	private boolean is3dActivated = true;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
 	private static final int to3DDistance = 25600000;
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 	private Context activityContext;
-	private SimpleSideDrawer mNav;
-	@InjectView(R.id.buttonSlide)
-	ImageButton buttonSlide;
-	@InjectView(R.id.buttonTypeCatre)
-	ImageButton buttonGlobeType;
-	@InjectView(R.id.buttonTypeView)
-	ImageButton buttonViewtype;
+
 	@InjectView(R.id.layoutContainerImage)
 	LinearLayout layoutContainer;
 	@InjectResource(R.drawable.globe3d)
@@ -72,7 +79,6 @@ public class MainActivity extends RoboActivity {
 	@InjectResource(R.drawable.glob2d)
 	Drawable glob2Ddrawable;
 
-	private ListView listSliding;
 
 	@InjectResource(R.string.type_view)
 	String typeViewHeader;
@@ -92,97 +98,88 @@ public class MainActivity extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mNav = new SimpleSideDrawer(this);
-		mNav.setLeftBehindContentView(R.layout.slide_content_layout);
-		listSliding = (ListView) findViewById(R.id.listSliding);
-		listSliding.setAdapter(new ActionsAdapter(this));
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.drawer_open,
+				R.string.drawer_close) {
+
+			/** Called when drawer is closed */
+			public void onDrawerClosed(View view) {
+
+				invalidateOptionsMenu();
+				getActionBar().setTitle("");
+
+			}
+
+			/** Called when a drawer is opened */
+			public void onDrawerOpened(View drawerView) {
+
+				invalidateOptionsMenu();
+				getActionBar().setTitle(getResources().getString(R.string.app_name));
+			}
+
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerList.setAdapter(new ActionsAdapter(this));
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setTitle("");
+		
+	
+		getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.whitetransparent)));
+		// Enabling Up navigation
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		activityContext = this;
-
-		buttonSlide.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				mNav.toggleLeftDrawer();
-				buttonSlide.setVisibility(View.GONE);
-			}
-		});
-
-		buttonViewtype.setOnClickListener(new View.OnClickListener() {
+		// Setting item click listener for the listview mDrawerList
+		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onClick(View v) {
-				PopupMenu popup = new PopupMenu(activityContext, v);
-				popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (layerset != null) {
 
-				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-					public boolean onMenuItemClick(MenuItem item) {
-						Toast.makeText(MainActivity.this, item.getTitle(),
-								Toast.LENGTH_SHORT).show();
-						return true;
-					}
-				});
+					final Layer layerToAdd = layerset
+							.getLayerByTitle((String) view.getTag());
+					if (layerToAdd != null) {
+						TextView txtContainer = (TextView) view
+								.findViewById(R.id.textLayer);
 
-				popup.show();
+						Drawable[] drawablesCoumpounds = txtContainer
+								.getCompoundDrawables();
 
-			}
-		});
+						if (!layerToAdd.isEnable()) {
+							ImageView imagetoAdd;
+							imagetoAdd = new ImageView(view.getContext());
+							imagetoAdd.setImageDrawable(drawablesCoumpounds[0]);
+							imagetoAdd.setLayoutParams(new LayoutParams(
+									LayoutParams.WRAP_CONTENT,
+									LayoutParams.WRAP_CONTENT));
+							imagetoAdd.setTag((String) view.getTag());
+							layoutContainer.addView(imagetoAdd);
 
-		listSliding
-				.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						if (layerset != null) {
+							layerToAdd.setEnable(true);
 
-							if (!mNav.isClosed()) {
-								mNav.toggleLeftDrawer();
-								buttonSlide.setVisibility(View.VISIBLE);
-								final Layer layerToAdd = layerset
-										.getLayerByTitle((String) view.getTag());
-								if (layerToAdd != null) {
-									TextView txtContainer = (TextView) view
-											.findViewById(R.id.textLayer);
+						} else {
 
-									Drawable[] drawablesCoumpounds = txtContainer
-											.getCompoundDrawables();
-
-									if (!layerToAdd.isEnable()) {
-										ImageView imagetoAdd;
-										imagetoAdd = new ImageView(view
-												.getContext());
-										imagetoAdd
-												.setImageDrawable(drawablesCoumpounds[0]);
-										imagetoAdd
-												.setLayoutParams(new LayoutParams(
-														LayoutParams.WRAP_CONTENT,
-														LayoutParams.WRAP_CONTENT));
-										imagetoAdd.setTag((String) view
-												.getTag());
-										layoutContainer.addView(imagetoAdd);
-
-										layerToAdd.setEnable(true);
-
-									} else {
-
-										layerToAdd.setEnable(false);
-										ArrayList<View> viewAll = getViewsByTag(layoutContainer);
-										for (View view2 : viewAll) {
-											if (view2.getTag().equals(
-													(String) view.getTag())) {
-												layoutContainer
-														.removeView(view2);
-												break;
-											}
-
-										}
-
-									}
+							layerToAdd.setEnable(false);
+							ArrayList<View> viewAll = getViewsByTag(layoutContainer);
+							for (View view2 : viewAll) {
+								if (view2.getTag().equals(
+										(String) view.getTag())) {
+									layoutContainer.removeView(view2);
+									break;
 								}
+
 							}
+
 						}
 					}
-				});
+				}
+
+				// Closing the drawer
+				mDrawerLayout.closeDrawer(mDrawerList);
+
+			}
+		});
+
 		if (Utils.settings == null)
 			Utils.settings = getSharedPreferences("settingsFile", MODE_PRIVATE);
 		if (Utils.isNetworkConnected(activityContext)) {
@@ -289,27 +286,57 @@ public class MainActivity extends RoboActivity {
 		latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
 		longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
 
-		buttonGlobeType.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(final View v) {
-
-				if (is3dActivated) {
-
-					is3dActivated = false;
-					buttonGlobeType.setImageDrawable(glob3Ddrawable);
-					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-							latitudeA, longitudeA, to2DDistance));
-
-				} else {
-					is3dActivated = true;
-					buttonGlobeType.setImageDrawable(glob2Ddrawable);
-					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-							latitudeA, longitudeA, to3DDistance));
-
-				}
-			}
-		});
+		// buttonGlobeType.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(final View v) {
+		//
+		// if (is3dActivated) {
+		//
+		// is3dActivated = false;
+		// buttonGlobeType.setImageDrawable(glob3Ddrawable);
+		// _g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+		// latitudeA, longitudeA, to2DDistance));
+		//
+		// } else {
+		// is3dActivated = true;
+		// buttonGlobeType.setImageDrawable(glob2Ddrawable);
+		// _g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+		// latitudeA, longitudeA, to3DDistance));
+		//
+		// }
+		// }
+		// });
 
 	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/** Called whenever we call invalidateOptionsMenu() */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// If the drawer is open, hide action items related to the content view
+		
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.popup, menu);
+		return true;
+	}
+
 }
