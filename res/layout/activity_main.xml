@@ -47,12 +47,129 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="50dp"
-        android:id="@+id/layoutContainerImage"
-        android:layout_height="fill_parent"
+        android:id="@+id/timeSelector"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"
+        android:baselineAligned="false"
+        android:orientation="vertical" >
+
+        <com.makinacorpus.meteofrance.ui.HorizontalListView
+            android:id="@+id/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#363835" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#7fd7fc"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="MatineSelector" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/matinee"
+                    android:textColor="@color/bleu_matin" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="6dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/bleu_matin" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/white"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="AMSelector" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:paddingBottom="15dp"
+                    android:text="@string/apresmidi"
+                    android:textColor="@android:color/white" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="6dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/bleu_matin"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="SoirSelector" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/soir"
+                    android:textColor="@color/bleu_matin" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="6dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/bleu_matin" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/white"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutContainerImage"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/timeSelector"
         android:layout_alignParentRight="true"
+        android:gravity="bottom"
         android:orientation="vertical" >
     </LinearLayout>
 

@@ -13,5 +13,7 @@
     <color name="ventcolor">#2b91c6</color>
     <color name="neigecolor">#1177ac</color>
     <color name="tmpcolor"> #006498</color>
+    <color name="bleu_matin">#0c6c9d</color>
+    <color name="gris_selector">#abacad</color>
 
 </resources>

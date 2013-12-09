@@ -136,47 +136,51 @@ public class MainActivity extends RoboActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
+						if (layerset != null) {
 
-						if (!mNav.isClosed()) {
-							mNav.toggleLeftDrawer();
-							buttonSlide.setVisibility(View.VISIBLE);
-							final Layer layerToAdd = layerset
-									.getLayerByTitle((String) view.getTag());
-							if (layerToAdd != null) {
-								TextView txtContainer = (TextView) view
-										.findViewById(R.id.textLayer);
+							if (!mNav.isClosed()) {
+								mNav.toggleLeftDrawer();
+								buttonSlide.setVisibility(View.VISIBLE);
+								final Layer layerToAdd = layerset
+										.getLayerByTitle((String) view.getTag());
+								if (layerToAdd != null) {
+									TextView txtContainer = (TextView) view
+											.findViewById(R.id.textLayer);
 
-								Drawable[] drawablesCoumpounds = txtContainer
-										.getCompoundDrawables();
+									Drawable[] drawablesCoumpounds = txtContainer
+											.getCompoundDrawables();
 
-								if (!layerToAdd.isEnable()) {
-									ImageView imagetoAdd;
-									imagetoAdd = new ImageView(view
-											.getContext());
-									imagetoAdd
-											.setImageDrawable(drawablesCoumpounds[0]);
-									imagetoAdd
-											.setLayoutParams(new LayoutParams(
-													LayoutParams.WRAP_CONTENT,
-													LayoutParams.WRAP_CONTENT));
-									imagetoAdd.setTag((String) view.getTag());
-									layoutContainer.addView(imagetoAdd);
+									if (!layerToAdd.isEnable()) {
+										ImageView imagetoAdd;
+										imagetoAdd = new ImageView(view
+												.getContext());
+										imagetoAdd
+												.setImageDrawable(drawablesCoumpounds[0]);
+										imagetoAdd
+												.setLayoutParams(new LayoutParams(
+														LayoutParams.WRAP_CONTENT,
+														LayoutParams.WRAP_CONTENT));
+										imagetoAdd.setTag((String) view
+												.getTag());
+										layoutContainer.addView(imagetoAdd);
 
-									layerToAdd.setEnable(true);
+										layerToAdd.setEnable(true);
 
-								} else {
+									} else {
 
-									layerToAdd.setEnable(false);
-									ArrayList<View> viewAll = getViewsByTag(layoutContainer);
-									for (View view2 : viewAll) {
-										if (view2.getTag().equals(
-												(String) view.getTag())) {
-											layoutContainer.removeView(view2);
-											break;
+										layerToAdd.setEnable(false);
+										ArrayList<View> viewAll = getViewsByTag(layoutContainer);
+										for (View view2 : viewAll) {
+											if (view2.getTag().equals(
+													(String) view.getTag())) {
+												layoutContainer
+														.removeView(view2);
+												break;
+											}
+
 										}
 
 									}
-
 								}
 							}
 						}
@@ -284,4 +288,17 @@ public class MainActivity extends RoboActivity {
 		}
 		return views;
 	}
+
+	public void MatineSelector(View v) {
+
+	}
+
+	public void AMSelector(View v) {
+
+	}
+
+	public void SoirSelector(View v) {
+
+	}
+
 }
