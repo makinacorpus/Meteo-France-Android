@@ -2,10 +2,12 @@ package com.makinacorpus.meteofrance;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.util.DisplayMetrics;
 
 public class Utils {
 	public static SharedPreferences settings;//pour le parametrage de l'app
@@ -32,5 +34,12 @@ public class Utils {
         }
         return currentLocation;
 }
+	
+	public static float convertDpToPixel(float dp, Context context){
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    float px = dp * (metrics.densityDpi / 160f);
+	    return px;
+	}
 
 }

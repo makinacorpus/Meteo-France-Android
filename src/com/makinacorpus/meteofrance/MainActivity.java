@@ -180,8 +180,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 							imagetoAdd = new ImageView(view.getContext());
 							imagetoAdd.setImageDrawable(drawablesCoumpounds[0]);
 							imagetoAdd.setLayoutParams(new LayoutParams(
-									LayoutParams.WRAP_CONTENT,
-									LayoutParams.WRAP_CONTENT));
+									(int)Utils.convertDpToPixel(40, activityContext),
+									(int)Utils.convertDpToPixel(40, activityContext)));
 							imagetoAdd.setTag((String) view.getTag());
 							layoutContainer.addView(imagetoAdd);
 

@@ -19,12 +19,12 @@
     <string name="type_view_traffic">Traffic</string>
     <string name="token_error">Erruer de récupération de token.Veuillez vérifier votre connexion internet SVP.</string>
     <!-- For hour selector -->
-    <string name="matinee">Matineé</string>
-    <string name="apresmidi">Après midi</string>
+    <string name="matinee">Matin</string>
+    <string name="apresmidi">Après-midi</string>
     <string name="soir">Soir</string>
-       <string name="matinee_time">8h - 11h</string>
-    <string name="apresmidi_time">12h - 17h</string>
-    <string name="soir_time">18h - 22h</string>
+    <string name="matinee_time">8h-11h</string>
+    <string name="apresmidi_time">12h-17h</string>
+    <string name="soir_time">18h-22h</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="token_loading">Récupération du token en cours&#8230;</string>

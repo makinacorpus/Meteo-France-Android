@@ -57,7 +57,7 @@
 
         <LinearLayout
             android:id="@+id/layoutContainerImage"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_above="@id/timeSelector"
             android:layout_alignParentRight="true"
