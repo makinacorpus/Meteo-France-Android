@@ -40,6 +40,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -57,11 +58,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
+import com.makinacorpus.meteofrance.adapter.MyPagerAdapterDay;
+import com.makinacorpus.meteofrance.adapter.MyPagerAdapterTime;
+import com.makinacorpus.meteofrance.listener.ITextViewListener;
+import com.makinacorpus.meteofrance.ui.PagerContainer;
+import com.makinacorpus.meteofrance.ui.TextDayView;
+import com.makinacorpus.meteofrance.ui.TextTimeView;
 
 @SuppressLint("NewApi")
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	MarksRenderer userMarkers = new MarksRenderer(false);
+	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/perfect-flat-icons-2/32/Location_marker_pin_map_gps.png";
 	ProgressDialog progress;
 	@InjectView(R.id.drawer_layout)
 	private DrawerLayout mDrawerLayout;
@@ -72,6 +80,9 @@ public class MainActivity extends RoboActivity {
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
 	private static final int to3DDistance = 25600000;
+	private static final double latitudeToulouse = 43.605256;
+	private static final double longitudeToulouse = 1.444988;
+
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 	private Context activityContext;
 	@InjectView(R.id.layoutContainerImage)
@@ -95,16 +106,24 @@ public class MainActivity extends RoboActivity {
 	String tokenLoading;
 	@InjectResource(R.string.your_position)
 	String yourPoisiton;
-
+	@InjectResource(R.string.geolocation_error)
+	String geolocationError;
 	Angle latitudeA;
 	Angle longitudeA;
 	Location userLocation;
+	// Pour la page de date
+	@InjectView(R.id.pager_container_Time)
+	private PagerContainer mContainerTime;
+	@InjectView(R.id.pager_container_day)
+	PagerContainer mContainerDay;
+
+	private MyPagerAdapterDay mPagerAdapterDay;
+	private MyPagerAdapterTime mPagerAdapterTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		userLocation = Utils.getCurrentLocation(this);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
@@ -134,7 +153,7 @@ public class MainActivity extends RoboActivity {
 
 		getActionBar().setBackgroundDrawable(
 				new ColorDrawable(getResources().getColor(
-						R.color.whitetransparent)));
+						R.color.blacktransparent)));
 		// Enabling Up navigation
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		activityContext = this;
@@ -215,6 +234,32 @@ public class MainActivity extends RoboActivity {
 						Toast.LENGTH_LONG).show();
 			}
 		}
+		userLocation = Utils.getCurrentLocation(this);
+		ViewPager pager = mContainerDay.getViewPager();
+		mPagerAdapterDay = new MyPagerAdapterDay(this, this);
+		pager.setAdapter(mPagerAdapterDay);
+		// Necessary or the pager will only have one extra page to show
+		// make this at least however many pages you can see
+		pager.setOffscreenPageLimit(mPagerAdapterDay.getCount());
+		// A little space between pages
+		pager.setPageMargin(10);
+
+		// If hardware acceleration is enabled, you should also remove
+		// clipping on the pager for its children.
+		pager.setClipChildren(false);
+		ViewPager pagerTime = mContainerTime.getViewPager();
+		mPagerAdapterTime = new MyPagerAdapterTime(this, this);
+		pagerTime.setAdapter(mPagerAdapterTime);
+
+		// Necessary or the pager will only have one extra page to show
+		// make this at least however many pages you can see
+		pagerTime.setOffscreenPageLimit(mPagerAdapterTime.getCount());
+		// A little space between pages
+		pagerTime.setPageMargin(0);
+
+		// If hardware acceleration is enabled, you should also remove
+		// clipping on the pager for its children.
+		pagerTime.setClipChildren(false);
 
 	}
 
@@ -266,7 +311,7 @@ public class MainActivity extends RoboActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-
+			userLocation = Utils.getCurrentLocation(activityContext);
 			SharedPreferences.Editor editor = Utils.settings.edit();
 			editor.putString("token", tokenToUse);
 			editor.commit();
@@ -317,22 +362,26 @@ public class MainActivity extends RoboActivity {
 				latitudeA = Angle.fromDegrees(userLocation.getLatitude());
 				longitudeA = Angle.fromDegrees(userLocation.getLongitude());
 
-				if (is3dActivated) {
+			} else {
+				latitudeA = Angle.fromDegrees(latitudeToulouse);
+				longitudeA = Angle.fromDegrees(longitudeToulouse);
 
-					is3dActivated = false;
+			}
+			if (is3dActivated) {
 
-					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-							latitudeA, longitudeA, to2DDistance));
-					item.setIcon(glob3Ddrawable);
+				is3dActivated = false;
 
-				} else {
-					is3dActivated = true;
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to2DDistance));
+				item.setIcon(glob3Ddrawable);
 
-					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
-							latitudeA, longitudeA, to3DDistance));
-					item.setIcon(glob2Ddrawable);
+			} else {
+				is3dActivated = true;
 
-				}
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to3DDistance));
+				item.setIcon(glob2Ddrawable);
+
 			}
 			break;
 
@@ -355,14 +404,24 @@ public class MainActivity extends RoboActivity {
 		getMenuInflater().inflate(R.menu.popup, menu);
 		return true;
 	}
-	
-	private void addMarkerPosition(){
-		final Geodetic2D position = new Geodetic2D(
-				Angle.fromDegrees(userLocation.getLatitude()),
-				Angle.fromDegrees(userLocation.getLongitude()));
+
+	private void addMarkerPosition() {
+		Geodetic2D position = null;
+		if (userLocation != null) {
+
+			position = new Geodetic2D(Angle.fromDegrees(userLocation
+					.getLatitude()), Angle.fromDegrees(userLocation
+					.getLongitude()));
+
+		} else {
+			position = new Geodetic2D(Angle.fromDegrees(latitudeToulouse),
+					Angle.fromDegrees(longitudeToulouse));
+			Toast.makeText(activityContext, geolocationError, Toast.LENGTH_LONG)
+					.show();
+
+		}
 		userMarkers.addMark(new Mark(yourPoisiton, //
-				new URL("http://appleiphone.fr/blog/wp-content/uploads/2011/04/location-gps.png",
-						false), //
+				new URL(markerUrl, false), //
 				new Geodetic3D(position, 0), //
 				AltitudeMode.RELATIVE_TO_GROUND, 0, //
 				true, //
@@ -370,4 +429,12 @@ public class MainActivity extends RoboActivity {
 		builder.addRenderer(userMarkers);
 	}
 
+	@Override
+	public void hasSelectedText(View v, int pos) {
+		if (v instanceof TextDayView) {
+			mPagerAdapterDay.daysViewPager.setSelected((TextDayView) v);
+		} else if (v instanceof TextTimeView) {
+			mPagerAdapterTime.timesViewPager.setSelected((TextTimeView) v);
+		}
+	}
 }

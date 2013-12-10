@@ -26,7 +26,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		globeLyer.setEnable(true);
 		layerSet.addLayer(globeLyer);
 
-		final WMSLayer tmpLyer = new WMSLayer("THETA__ISO_TP_2000", new URL(
+		final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
 				"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
 						+ tokenToUse + "&", false), WMSServerVersion.WMS_1_3_0,
 				Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
@@ -44,10 +44,21 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
-		cloudsLayer.setTitle(ctx.getResources().getString(R.string.orage_name));
+		cloudsLayer.setTitle(ctx.getResources().getString(R.string.couverture_name));
 		cloudsLayer.setEnable(false);
 
 		layerSet.addLayer(cloudsLayer);
+		final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT",
+				new URL(
+						"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+								+ tokenToUse + "&", false),
+				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
+				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+				TimeInterval.fromDays(30), true);
+		ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name));
+		ventLayer.setEnable(false);
+
+		layerSet.addLayer(ventLayer);
 		
 
 		return layerSet;

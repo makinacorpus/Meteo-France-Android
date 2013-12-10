@@ -6,21 +6,21 @@
         android:icon="@drawable/glob2d"
         android:orderInCategory="100"
         android:showAsAction="always"/>
-    <item
-        android:id="@+id/selectViewCarte"
-        android:icon="@drawable/select_menu"
-        android:orderInCategory="200"
-        android:showAsAction="always">
-        <menu>
-            <item
-                android:id="@+id/satellite"
-                android:icon="@drawable/globe3d"
-                android:title="@string/type_view_satellite"/>
-            <item
-                android:id="@+id/traffic"
-                android:icon="@drawable/glob2d"
-                android:title="@string/type_view_traffic"/>
-        </menu>
-    </item>
+<!--     <item -->
+<!--         android:id="@+id/selectViewCarte" -->
+<!--         android:icon="@drawable/select_menu" -->
+<!--         android:orderInCategory="200" -->
+<!--         android:showAsAction="always"> -->
+<!--         <menu> -->
+<!--             <item -->
+<!--                 android:id="@+id/satellite" -->
+<!--                 android:icon="@drawable/globe3d" -->
+<!--                 android:title="@string/type_view_satellite"/> -->
+<!--             <item -->
+<!--                 android:id="@+id/traffic" -->
+<!--                 android:icon="@drawable/glob2d" -->
+<!--                 android:title="@string/type_view_traffic"/> -->
+<!--         </menu> -->
+<!--     </item> -->
 
 </menu>

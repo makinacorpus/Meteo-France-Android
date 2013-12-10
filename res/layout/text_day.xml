@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/text_day"
+        android:layout_width="170dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/darker_gray" />
+
+    <View
+        android:id="@+id/viewSlectedMarker"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/trait_date"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/viewNotSlectedMarker"
+        android:layout_width="2dp"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/text_gris"
+        android:visibility="gone" />
+
+</RelativeLayout>

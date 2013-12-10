@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/text_time_title"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="#FF00FF00" />
+
+    <TextView
+        android:id="@+id/text_time_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_time_title"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="#FF0000FF" />
+       <View
+        android:id="@+id/viewSlectedMarker"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@color/whitetran"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/viewNotSlectedMarker"
+        android:layout_width="2dp"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/bleu_matin"
+        android:visibility="gone" />
+
+</RelativeLayout>

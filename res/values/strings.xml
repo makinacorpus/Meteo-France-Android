@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-        <string name="app_name">Météo France</string>
+    <string name="app_name">Météo France</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="geolocation_error">Erreur lors de la détection de votre position.</string>
 
     <!-- Pour le menu de gauche -->
     <string name="ensoleille_name">Ensoleillé</string>
@@ -18,12 +19,18 @@
     <string name="type_view_traffic">Traffic</string>
     <string name="token_error">Erruer de récupération de token.Veuillez vérifier votre connexion internet SVP.</string>
     <!-- For hour selector -->
-    <string name="matinee">Matineé\n8h-11h</string>
-    <string name="apresmidi">Après midi\n12h-17h</string>
-    <string name="soir">Soir\n18h-22h</string>
-       <string name="drawer_open">Open Drawer</string>
+    <string name="matinee">Matineé</string>
+    <string name="apresmidi">Après midi</string>
+    <string name="soir">Soir</string>
+       <string name="matinee_time">8h - 11h</string>
+    <string name="apresmidi_time">12h - 17h</string>
+    <string name="soir_time">18h - 22h</string>
+    <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
-        <string name="token_loading">Récupération du token en cours&#8230;</string>
-          <string name="your_position">Votre position</string>
+    <string name="token_loading">Récupération du token en cours&#8230;</string>
+    <string name="your_position">Votre position</string>
+    <string name="adefinir">A définir</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="demain">Demain</string>
 
 </resources>
