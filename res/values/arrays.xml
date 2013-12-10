@@ -21,13 +21,13 @@
         <item>@string/adefinir</item>
     </string-array>
     <string-array name="actions_color">
-        <item>@color/tmpcolor</item>
-        <item>@color/ventcolor</item>
-        <item>@color/nuagecolor</item>
         <item>@color/soleilcolor</item>
+        <item>@color/nuagecolor</item>
         <item>@color/oragecolor</item>
         <item>@color/pluiecolor</item>
+        <item>@color/ventcolor</item>
         <item>@color/neigecolor</item>
+        <item>@color/tmpcolor</item>
     </string-array>
 
 </resources>
