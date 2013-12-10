@@ -11,12 +11,17 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.glob3.mobile.generated.AltitudeMode;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Color;
+import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
 import org.glob3.mobile.generated.LayerSet;
+import org.glob3.mobile.generated.Mark;
+import org.glob3.mobile.generated.MarksRenderer;
 import org.glob3.mobile.generated.Planet;
+import org.glob3.mobile.generated.URL;
 import org.glob3.mobile.specific.G3MBuilder_Android;
 import org.glob3.mobile.specific.G3MWidget_Android;
 import org.json.JSONException;
@@ -26,10 +31,12 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -53,25 +60,20 @@ import com.makinacorpus.meteofrance.adapter.ActionsAdapter;
 
 @SuppressLint("NewApi")
 public class MainActivity extends RoboActivity {
-	// Within which the entire activity is enclosed
+	// Pour l'affichage de la position de l'utilisateur
+	MarksRenderer userMarkers = new MarksRenderer(false);
+	ProgressDialog progress;
 	@InjectView(R.id.drawer_layout)
 	private DrawerLayout mDrawerLayout;
-
-	// ListView represents Navigation Drawer
 	@InjectView(R.id.drawer_list)
 	private ListView mDrawerList;
-
-	// ActionBarDrawerToggle indicates the presence of Navigation Drawer in the
-	// action bar
 	private ActionBarDrawerToggle mDrawerToggle;
-
 	private boolean is3dActivated = true;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
 	private static final int to3DDistance = 25600000;
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 	private Context activityContext;
-
 	@InjectView(R.id.layoutContainerImage)
 	LinearLayout layoutContainer;
 	@InjectResource(R.drawable.globe3d)
@@ -89,14 +91,21 @@ public class MainActivity extends RoboActivity {
 	G3MBuilder_Android builder;
 	@InjectView(R.id.g3mWidgetHolder)
 	RelativeLayout _placeHolder;
+	@InjectResource(R.string.token_loading)
+	String tokenLoading;
+	@InjectResource(R.string.your_position)
+	String yourPoisiton;
 
 	Angle latitudeA;
 	Angle longitudeA;
+	Location userLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		userLocation = Utils.getCurrentLocation(this);
+
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
 				R.string.drawer_close) {
@@ -192,10 +201,11 @@ public class MainActivity extends RoboActivity {
 				layerset = SimpleRasterLayerBuilder.createLayerset(
 						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
-
-				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				builder.setBackgroundColor(Color
 						.fromRGBA255(255, 255, 255, 255));
+
+				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
 
 				_placeHolder.addView(_g3mWidget);
@@ -242,6 +252,9 @@ public class MainActivity extends RoboActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			progress = new ProgressDialog(activityContext);
+			progress.setMessage(tokenLoading);
+			progress.show();
 		}
 
 		@Override
@@ -260,13 +273,17 @@ public class MainActivity extends RoboActivity {
 			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
 					activityContext);
 			builder = new G3MBuilder_Android(activityContext);
+			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+
 			builder.setPlanet(Planet.createSphericalEarth());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
-			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
 
 			_placeHolder.addView(_g3mWidget);
-
+			if (progress.isShowing()) {
+				progress.dismiss();
+			}
 		}
 	}
 
@@ -282,8 +299,6 @@ public class MainActivity extends RoboActivity {
 		return views;
 	}
 
-
-
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -297,24 +312,27 @@ public class MainActivity extends RoboActivity {
 		}
 		switch (item.getItemId()) {
 		case R.id.switchViewItem:
-			latitudeA = Angle.fromDegreesMinutesSeconds(48, 52, 25.58);
-			longitudeA = Angle.fromDegreesMinutesSeconds(2, 17, 42.12);
+			if (userLocation != null) {
 
-			if (is3dActivated) {
+				latitudeA = Angle.fromDegrees(userLocation.getLatitude());
+				longitudeA = Angle.fromDegrees(userLocation.getLongitude());
 
-				is3dActivated = false;
+				if (is3dActivated) {
 
-				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
-						longitudeA, to2DDistance));
-				item.setIcon(glob3Ddrawable);
+					is3dActivated = false;
 
-			} else {
-				is3dActivated = true;
+					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+							latitudeA, longitudeA, to2DDistance));
+					item.setIcon(glob3Ddrawable);
 
-				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
-						longitudeA, to3DDistance));
-				item.setIcon(glob2Ddrawable);
+				} else {
+					is3dActivated = true;
 
+					_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(
+							latitudeA, longitudeA, to3DDistance));
+					item.setIcon(glob2Ddrawable);
+
+				}
 			}
 			break;
 
@@ -336,6 +354,20 @@ public class MainActivity extends RoboActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.popup, menu);
 		return true;
+	}
+	
+	private void addMarkerPosition(){
+		final Geodetic2D position = new Geodetic2D(
+				Angle.fromDegrees(userLocation.getLatitude()),
+				Angle.fromDegrees(userLocation.getLongitude()));
+		userMarkers.addMark(new Mark(yourPoisiton, //
+				new URL("http://appleiphone.fr/blog/wp-content/uploads/2011/04/location-gps.png",
+						false), //
+				new Geodetic3D(position, 0), //
+				AltitudeMode.RELATIVE_TO_GROUND, 0, //
+				true, //
+				14));
+		builder.addRenderer(userMarkers);
 	}
 
 }

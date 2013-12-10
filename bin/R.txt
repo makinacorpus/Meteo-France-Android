@@ -60,10 +60,12 @@ int string rsiquepluise_name 0x7f070006
 int string soir 0x7f070010
 int string temperature_name 0x7f070009
 int string token_error 0x7f07000d
+int string token_loading 0x7f070013
 int string type_view 0x7f07000a
 int string type_view_satellite 0x7f07000b
 int string type_view_traffic 0x7f07000c
 int string vent_name 0x7f070007
+int string your_position 0x7f070014
 int style AppBaseTheme 0x7f080000
 int style AppTheme 0x7f080001
 int style AppTheme_ActionBar_TitleTextStyle 0x7f080003

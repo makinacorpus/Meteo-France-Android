@@ -99,10 +99,12 @@ public final class R {
         public static final int soir=0x7f070010;
         public static final int temperature_name=0x7f070009;
         public static final int token_error=0x7f07000d;
+        public static final int token_loading=0x7f070013;
         public static final int type_view=0x7f07000a;
         public static final int type_view_satellite=0x7f07000b;
         public static final int type_view_traffic=0x7f07000c;
         public static final int vent_name=0x7f070007;
+        public static final int your_position=0x7f070014;
     }
     public static final class style {
         /** 
