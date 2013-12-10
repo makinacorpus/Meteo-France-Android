@@ -225,7 +225,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						.fromRGBA255(255, 255, 255, 255));
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				
+				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
 
 				_placeHolder.addView(_g3mWidget);
