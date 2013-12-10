@@ -70,7 +70,7 @@
 
     <ListView
         android:id="@+id/drawer_list"
-        android:layout_width="300dp"
+        android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
