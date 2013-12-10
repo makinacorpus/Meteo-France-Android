@@ -69,7 +69,7 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	MarksRenderer userMarkers = new MarksRenderer(false);
-	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/perfect-flat-icons-2/32/Location_marker_pin_map_gps.png";
+	private static final String markerUrl = "https://cdn4.iconfinder.com/data/icons/brightmix/128/monotone_location_pin_marker.png";
 	ProgressDialog progress;
 	@InjectView(R.id.drawer_layout)
 	private DrawerLayout mDrawerLayout;
@@ -77,6 +77,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private boolean is3dActivated = true;
+	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
 	private static final int to3DDistance = 25600000;
@@ -224,7 +225,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						.fromRGBA255(255, 255, 255, 255));
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				addMarkerPosition();
+				
 				_g3mWidget = builder.createWidget();
 
 				_placeHolder.addView(_g3mWidget);
@@ -319,7 +320,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 					activityContext);
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
-
 			builder.setPlanet(Planet.createSphericalEarth());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
@@ -384,7 +384,19 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			}
 			break;
-
+		case R.id.switchAddPosition:
+			if(!isMarkerPositionActivated){
+		
+				isMarkerPositionActivated = true;
+				userMarkers.setEnable(true);
+				
+			}else{
+				isMarkerPositionActivated = false;
+				userMarkers.setEnable(false);
+			
+				
+			}
+			break;
 		default:
 			break;
 		}
@@ -427,6 +439,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				true, //
 				14));
 		builder.addRenderer(userMarkers);
+		userMarkers.setEnable(false);
+		
 	}
 
 	@Override
