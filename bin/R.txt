@@ -46,6 +46,7 @@ int id g3mWidgetHolder 0x7f0a0003
 int id layoutContainerImage 0x7f0a0007
 int id pager_container_Time 0x7f0a0006
 int id pager_container_day 0x7f0a0005
+int id switchAddPosition 0x7f0a000f
 int id switchViewItem 0x7f0a000e
 int id textLayer 0x7f0a0000
 int id text_day 0x7f0a0009

@@ -75,6 +75,7 @@ public final class R {
         public static final int layoutContainerImage=0x7f0a0007;
         public static final int pager_container_Time=0x7f0a0006;
         public static final int pager_container_day=0x7f0a0005;
+        public static final int switchAddPosition=0x7f0a000f;
         public static final int switchViewItem=0x7f0a000e;
         public static final int textLayer=0x7f0a0000;
         public static final int text_day=0x7f0a0009;
