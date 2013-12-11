@@ -2,7 +2,11 @@ package com.makinacorpus.meteofrance;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,6 +45,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -69,6 +74,7 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	MarksRenderer userMarkers = new MarksRenderer(false);
+	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn4.iconfinder.com/data/icons/brightmix/128/monotone_location_pin_marker.png";
 	ProgressDialog progress;
 	@InjectView(R.id.drawer_layout)
@@ -147,6 +153,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 
 		};
+		listLayerActivated = new ArrayList<String>(); 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerList.setAdapter(new ActionsAdapter(this));
 		getActionBar().setHomeButtonEnabled(true);
@@ -176,12 +183,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 								.getCompoundDrawables();
 
 						if (!layerToAdd.isEnable()) {
+							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
 							imagetoAdd.setImageDrawable(drawablesCoumpounds[0]);
 							imagetoAdd.setLayoutParams(new LayoutParams(
-									(int)Utils.convertDpToPixel(40, activityContext),
-									(int)Utils.convertDpToPixel(40, activityContext)));
+									(int) Utils.convertDpToPixel(40,
+											activityContext), (int) Utils
+											.convertDpToPixel(40,
+													activityContext)));
 							imagetoAdd.setTag((String) view.getTag());
 							layoutContainer.addView(imagetoAdd);
 
@@ -191,12 +201,16 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 							layerToAdd.setEnable(false);
 							ArrayList<View> viewAll = getViewsByTag(layoutContainer);
+							int counter=0;
 							for (View view2 : viewAll) {
+								
+								
 								if (view2.getTag().equals(
 										(String) view.getTag())) {
 									layoutContainer.removeView(view2);
+									listLayerActivated.remove(counter);
 									break;
-								}
+								}else counter++;
 
 							}
 
@@ -219,7 +233,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			if (!Utils.settings.getString("token", "").equals("")) {
 
 				layerset = SimpleRasterLayerBuilder.createLayerset(
-						Utils.settings.getString("token", ""), activityContext);
+						Utils.settings.getString("token", ""),
+						formatDateToUniversel(0), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
 				builder.setBackgroundColor(Color
 						.fromRGBA255(255, 255, 255, 255));
@@ -248,6 +263,40 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		// If hardware acceleration is enabled, you should also remove
 		// clipping on the pager for its children.
 		pager.setClipChildren(false);
+
+		pager.setOnPageChangeListener(new OnPageChangeListener() {
+			public void onPageScrollStateChanged(int state) {
+			}
+
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
+			}
+
+			public void onPageSelected(int position) {
+				// Check if this is the page you want.
+				userLocation = Utils.getCurrentLocation(activityContext);
+				_placeHolder.removeAllViews();
+				
+			
+				layerset= new LayerSet();
+				layerset = SimpleRasterLayerBuilder.createLayerset(Utils.settings.getString("token", ""),
+						formatDateToUniversel(position), activityContext);
+				builder = new G3MBuilder_Android(activityContext);
+				builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+				builder.setPlanet(Planet.createSphericalEarth());
+				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				addMarkerPosition();
+				_g3mWidget = builder.createWidget();
+
+				_placeHolder.addView(_g3mWidget);
+				for (int i = 0; i < listLayerActivated.size(); i++) {
+					final Layer layerToAdd = layerset
+							.getLayerByTitle(listLayerActivated.get(i));
+					layerToAdd.setEnable(true);
+				}
+
+			}
+		});
 		ViewPager pagerTime = mContainerTime.getViewPager();
 		mPagerAdapterTime = new MyPagerAdapterTime(this, this);
 		pagerTime.setAdapter(mPagerAdapterTime);
@@ -316,8 +365,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			SharedPreferences.Editor editor = Utils.settings.edit();
 			editor.putString("token", tokenToUse);
 			editor.commit();
+
 			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
-					activityContext);
+					formatDateToUniversel(0), activityContext);
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
 			builder.setPlanet(Planet.createSphericalEarth());
@@ -385,16 +435,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 			break;
 		case R.id.switchAddPosition:
-			if(!isMarkerPositionActivated){
-		
+			if (!isMarkerPositionActivated) {
+
 				isMarkerPositionActivated = true;
 				userMarkers.setEnable(true);
-				
-			}else{
+
+			} else {
 				isMarkerPositionActivated = false;
 				userMarkers.setEnable(false);
-			
-				
+
 			}
 			break;
 		default:
@@ -440,7 +489,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				14));
 		builder.addRenderer(userMarkers);
 		userMarkers.setEnable(false);
-		
+
 	}
 
 	@Override
@@ -450,5 +499,19 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		} else if (v instanceof TextTimeView) {
 			mPagerAdapterTime.timesViewPager.setSelected((TextTimeView) v);
 		}
+	}
+
+	private String formatDateToUniversel(int position) {
+		Locale locale = Locale.getDefault();
+		Date actuelle = new Date();
+		if (position == 0)
+			actuelle.setHours(actuelle.getHours() + 6);
+		else
+			actuelle.setHours(actuelle.getHours() + 24 * position + 6);
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// DateFormat dateFormattime = new SimpleDateFormat("HH:00:00");
+
+		return dateFormat.format(actuelle) + "T15:00:00Z";
 	}
 }

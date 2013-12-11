@@ -14,7 +14,7 @@ import android.content.Context;
 
 public class SimpleRasterLayerBuilder extends LayerBuilder {
 
-	public static LayerSet createLayerset(String tokenToUse, Context ctx) {
+	public static LayerSet createLayerset(String tokenToUse,String dateToUse, Context ctx) {
 		final LayerSet layerSet = new LayerSet();
 
 		final WMSLayer globeLyer = new WMSLayer("openstreetmap", new URL(
@@ -28,7 +28,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 		final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
 				"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
-						+ tokenToUse + "&", false), WMSServerVersion.WMS_1_3_0,
+						+ tokenToUse + "&time="+dateToUse+"&", false), WMSServerVersion.WMS_1_3_0,
 				Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
 				new LevelTileCondition(0, 18), TimeInterval.fromDays(30), true);
 		tmpLyer.setTitle(ctx.getResources()
@@ -51,7 +51,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT",
 				new URL(
 						"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
-								+ tokenToUse + "&", false),
+								+ tokenToUse + "&time="+dateToUse+"&", false),
 				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
