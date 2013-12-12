@@ -1,9 +1,10 @@
 package com.makinacorpus.meteofrance;
 
+import org.glob3.mobile.generated.Angle;
+import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.LayerBuilder;
 import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.LevelTileCondition;
-import org.glob3.mobile.generated.MapBoxLayer;
 import org.glob3.mobile.generated.Sector;
 import org.glob3.mobile.generated.TimeInterval;
 import org.glob3.mobile.generated.URL;
@@ -14,7 +15,8 @@ import android.content.Context;
 
 public class SimpleRasterLayerBuilder extends LayerBuilder {
 
-	public static LayerSet createLayerset(String tokenToUse,String dateToUse, Context ctx) {
+	public static LayerSet createLayerset(String tokenToUse, String dateToUse,
+			Context ctx) {
 		final LayerSet layerSet = new LayerSet();
 
 		final WMSLayer globeLyer = new WMSLayer("openstreetmap", new URL(
@@ -28,9 +30,10 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 		final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
 				"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
-						+ tokenToUse + "&time="+dateToUse+"&", false), WMSServerVersion.WMS_1_3_0,
-				Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
-				new LevelTileCondition(0, 18), TimeInterval.fromDays(30), true);
+						+ tokenToUse + "&time=" + dateToUse + "&", false),
+				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
+				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+				TimeInterval.fromDays(30), true);
 		tmpLyer.setTitle(ctx.getResources()
 				.getString(R.string.temperature_name));
 		tmpLyer.setEnable(false);
@@ -44,14 +47,14 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
-		cloudsLayer.setTitle(ctx.getResources().getString(R.string.couverture_name));
+		cloudsLayer.setTitle(ctx.getResources().getString(
+				R.string.couverture_name));
 		cloudsLayer.setEnable(false);
 
 		layerSet.addLayer(cloudsLayer);
-		final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT",
-				new URL(
-						"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
-								+ tokenToUse + "&time="+dateToUse+"&", false),
+		final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
+				"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+						+ tokenToUse + "&time=" + dateToUse + "&", false),
 				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
@@ -59,8 +62,26 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		ventLayer.setEnable(false);
 
 		layerSet.addLayer(ventLayer);
-		
+
+		 final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90), Angle.fromDegrees(-180));
+		 final Geodetic2D upper = new Geodetic2D(Angle.fromDegrees(90), Angle.fromDegrees(180)); 
+		 final Sector demSector = new Sector(lower, upper);
+		 
+		final WMSLayer precipitationLayer = new WMSLayer(
+				"precipitation_amount_60mn", new URL(
+						"http://screamshot.makinacorpus.net/public/api/ogc/wms/radar/?token="
+								+ tokenToUse + "&", false),
+				WMSServerVersion.WMS_1_3_0, demSector, "image/png",
+				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+				TimeInterval.fromDays(30), true);
+		precipitationLayer.setExtraParameter("BBOX=-90,-180,90,180");
+		precipitationLayer.setTitle(ctx.getResources().getString(
+				R.string.precipitation_name));
+		precipitationLayer.setEnable(false);
+
+		layerSet.addLayer(precipitationLayer);
 
 		return layerSet;
 	}
+//	-90.0,-180,90.0,180
 }

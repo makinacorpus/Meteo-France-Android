@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.glob3.mobile.generated.AltitudeMode;
 import org.glob3.mobile.generated.Angle;
+import org.glob3.mobile.generated.Camera;
 import org.glob3.mobile.generated.Color;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
@@ -25,6 +26,7 @@ import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Mark;
 import org.glob3.mobile.generated.MarksRenderer;
 import org.glob3.mobile.generated.Planet;
+import org.glob3.mobile.generated.TimeInterval;
 import org.glob3.mobile.generated.URL;
 import org.glob3.mobile.specific.G3MBuilder_Android;
 import org.glob3.mobile.specific.G3MWidget_Android;
@@ -74,23 +76,25 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	MarksRenderer userMarkers = new MarksRenderer(false);
+	private static final int limit2D = 290000;
 	ArrayList<String> listLayerActivated;
-	private static final String markerUrl = "https://cdn4.iconfinder.com/data/icons/brightmix/128/monotone_location_pin_marker.png";
+	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
+	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+
 	ProgressDialog progress;
 	@InjectView(R.id.drawer_layout)
 	private DrawerLayout mDrawerLayout;
 	@InjectView(R.id.drawer_list)
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	private boolean is3dActivated = true;
+
 	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 10000;
-	private static final int to3DDistance = 25600000;
+	private static final int to3DDistance = 25000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
 
-	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 	private Context activityContext;
 	@InjectView(R.id.layoutContainerImage)
 	LinearLayout layoutContainer;
@@ -115,6 +119,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	String yourPoisiton;
 	@InjectResource(R.string.geolocation_error)
 	String geolocationError;
+	@InjectResource(R.string.nondispo_layer)
+	String layerNotAvalaible;
+	@InjectResource(R.string.precipitation_name)
+	String layerPrecepitationName;
 	Angle latitudeA;
 	Angle longitudeA;
 	Location userLocation;
@@ -153,7 +161,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 
 		};
-		listLayerActivated = new ArrayList<String>(); 
+		listLayerActivated = new ArrayList<String>();
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerList.setAdapter(new ActionsAdapter(this));
 		getActionBar().setHomeButtonEnabled(true);
@@ -172,6 +180,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (layerset != null) {
+					Camera cameraaa = _g3mWidget.getNextCamera();
+
+					Geodetic3D geo2D = cameraaa.getGeodeticPosition();
 
 					final Layer layerToAdd = layerset
 							.getLayerByTitle((String) view.getTag());
@@ -183,6 +194,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 								.getCompoundDrawables();
 
 						if (!layerToAdd.isEnable()) {
+							if (((String) view.getTag())
+									.equals(layerPrecepitationName)
+									&& geo2D._height > limit2D) {
+								Toast.makeText(activityContext,
+										layerNotAvalaible, Toast.LENGTH_LONG)
+										.show();
+								mDrawerLayout.closeDrawer(mDrawerList);
+								return;
+							}
 							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
@@ -201,16 +221,16 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 							layerToAdd.setEnable(false);
 							ArrayList<View> viewAll = getViewsByTag(layoutContainer);
-							int counter=0;
+							int counter = 0;
 							for (View view2 : viewAll) {
-								
-								
+
 								if (view2.getTag().equals(
 										(String) view.getTag())) {
 									layoutContainer.removeView(view2);
 									listLayerActivated.remove(counter);
 									break;
-								}else counter++;
+								} else
+									counter++;
 
 							}
 
@@ -274,26 +294,40 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			public void onPageSelected(int position) {
 				// Check if this is the page you want.
+				Camera cameraaa = _g3mWidget.getNextCamera();
+
+				Geodetic3D geo2D = cameraaa.getGeodeticPosition();
+
 				userLocation = Utils.getCurrentLocation(activityContext);
 				_placeHolder.removeAllViews();
-				
-			
-				layerset= new LayerSet();
-				layerset = SimpleRasterLayerBuilder.createLayerset(Utils.settings.getString("token", ""),
+
+				layerset = new LayerSet();
+				layerset = SimpleRasterLayerBuilder.createLayerset(
+						Utils.settings.getString("token", ""),
 						formatDateToUniversel(position), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
-				builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+				builder.setBackgroundColor(Color
+						.fromRGBA255(255, 255, 255, 255));
 				builder.setPlanet(Planet.createSphericalEarth());
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				addMarkerPosition();
+
 				_g3mWidget = builder.createWidget();
 
 				_placeHolder.addView(_g3mWidget);
+
 				for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
 							.getLayerByTitle(listLayerActivated.get(i));
 					layerToAdd.setEnable(true);
 				}
+				Camera cameraNEwPoisiton = _g3mWidget.getNextCamera();
+
+				Geodetic3D geo2DNewPosition = cameraNEwPoisiton.getGeodeticPosition();
+				if(!geo2DNewPosition.isEquals(geo2D))
+				{
+					_g3mWidget.setAnimatedCameraPosition(geo2D);
+					}
 
 			}
 		});
@@ -417,16 +451,28 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				longitudeA = Angle.fromDegrees(longitudeToulouse);
 
 			}
-			if (is3dActivated) {
+			Camera cameraaa = _g3mWidget.getNextCamera();
 
-				is3dActivated = false;
+			Geodetic3D geo2D = cameraaa.getGeodeticPosition();
+
+			if (geo2D._height > limit2D) {
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to2DDistance));
 				item.setIcon(glob3Ddrawable);
 
 			} else {
-				is3dActivated = true;
+				final Layer layerToAdd = layerset
+						.getLayerByTitle(layerPrecepitationName);
+				layerToAdd.setEnable(false);
+				for (int i = 0; i < listLayerActivated.size(); i++) {
+					if (listLayerActivated.get(i)
+							.equals(layerPrecepitationName)) {
+						listLayerActivated.remove(i);
+						break;
+					}
+
+				}
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
@@ -439,6 +485,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				isMarkerPositionActivated = true;
 				userMarkers.setEnable(true);
+
+				// Toast.makeText(activityContext,
+				// ""+cameraaa.getGeodeticPosition()._height,
+				// Toast.LENGTH_LONG).show();
 
 			} else {
 				isMarkerPositionActivated = false;
@@ -505,9 +555,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		Locale locale = Locale.getDefault();
 		Date actuelle = new Date();
 		if (position == 0)
-			actuelle.setHours(actuelle.getHours() + 6);
+			actuelle.setHours(actuelle.getHours());
 		else
-			actuelle.setHours(actuelle.getHours() + 24 * position + 6);
+			actuelle.setHours(actuelle.getHours() + 24 * position);
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		// DateFormat dateFormattime = new SimpleDateFormat("HH:00:00");

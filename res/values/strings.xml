@@ -10,6 +10,7 @@
     <string name="ensoleille_name">Ensoleillé</string>
     <string name="couverture_name">Couverture nuageuse</string>
     <string name="orage_name">Orages</string>
+    <string name="precipitation_name">Précipitation</string>
     <string name="rsiquepluise_name">Risques de pluie</string>
     <string name="vent_name">Vents</string>
     <string name="neige_name">Neige</string>
@@ -32,5 +33,6 @@
     <string name="adefinir">A définir</string>
     <string name="today">Aujourd\'hui</string>
     <string name="demain">Demain</string>
+    <string name="nondispo_layer">Cette couche n\'est disponible qu\'en 2D.</string>
 
 </resources>

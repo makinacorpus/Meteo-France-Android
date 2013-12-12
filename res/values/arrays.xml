@@ -5,6 +5,7 @@
         <item>@drawable/temperature</item>
         <item>@drawable/vents</item>
         <item>@drawable/nuage</item>
+        <item>@drawable/pluie</item>
         <item>@drawable/soleil</item>
         <item>@drawable/orage</item>
         <item>@drawable/pluie</item>
@@ -15,7 +16,7 @@
         <item>@string/temperature_name</item>
         <item>@string/vent_name</item>
         <item>@string/couverture_name</item>
-        <item>@string/adefinir</item>
+        <item>@string/precipitation_name</item>
         <item>@string/adefinir</item>
         <item>@string/adefinir</item>
         <item>@string/adefinir</item>
