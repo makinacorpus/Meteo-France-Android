@@ -19,6 +19,8 @@ import org.glob3.mobile.generated.AltitudeMode;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Camera;
 import org.glob3.mobile.generated.Color;
+import org.glob3.mobile.generated.G3MContext;
+import org.glob3.mobile.generated.GInitializationTask;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
@@ -26,7 +28,6 @@ import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Mark;
 import org.glob3.mobile.generated.MarksRenderer;
 import org.glob3.mobile.generated.Planet;
-import org.glob3.mobile.generated.TimeInterval;
 import org.glob3.mobile.generated.URL;
 import org.glob3.mobile.specific.G3MBuilder_Android;
 import org.glob3.mobile.specific.G3MWidget_Android;
@@ -220,7 +221,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						} else {
 
 							layerToAdd.setEnable(false);
-						
+
 							removeIconFromMap((String) view.getTag());
 						}
 					}
@@ -288,8 +289,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				userLocation = Utils.getCurrentLocation(activityContext);
 				_placeHolder.removeAllViews();
-
-				layerset = new LayerSet();
 				layerset = SimpleRasterLayerBuilder.createLayerset(
 						Utils.settings.getString("token", ""),
 						formatDateToUniversel(position), activityContext);
@@ -311,11 +310,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				}
 				Camera cameraNEwPoisiton = _g3mWidget.getNextCamera();
 
-				Geodetic3D geo2DNewPosition = cameraNEwPoisiton.getGeodeticPosition();
-				if(!geo2DNewPosition.isEquals(geo2D))
-				{
+				Geodetic3D geo2DNewPosition = cameraNEwPoisiton
+						.getGeodeticPosition();
+				if (!geo2DNewPosition.isEquals(geo2D)) {
 					_g3mWidget.setAnimatedCameraPosition(geo2D);
-					}
+				}
 
 			}
 		});
@@ -393,10 +392,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
 			builder.setPlanet(Planet.createSphericalEarth());
+			builder.setInitializationTask(initialisationTask());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
-	
 
 			_placeHolder.addView(_g3mWidget);
 			if (progress.isShowing()) {
@@ -454,9 +453,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				final Layer layerToAdd = layerset
 						.getLayerByTitle(layerPrecepitationName);
 				layerToAdd.setEnable(false);
-				
+
 				removeIconFromMap(layerPrecepitationName);
-				
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
@@ -469,10 +467,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				isMarkerPositionActivated = true;
 				userMarkers.setEnable(true);
-
-				// Toast.makeText(activityContext,
-				// ""+cameraaa.getGeodeticPosition()._height,
-				// Toast.LENGTH_LONG).show();
 
 			} else {
 				isMarkerPositionActivated = false;
@@ -548,8 +542,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 		return dateFormat.format(actuelle) + "T15:00:00Z";
 	}
-	
-	private void removeIconFromMap(String tag){
+
+	private void removeIconFromMap(String tag) {
 		ArrayList<View> viewAll = getViewsByTag(layoutContainer);
 		int counter = 0;
 		for (View view2 : viewAll) {
@@ -563,4 +557,22 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 		}
 	}
+
+	private GInitializationTask initialisationTask() {
+
+		final GInitializationTask initTask = new GInitializationTask() {
+			@Override
+			public void run(final G3MContext context) {
+
+			}
+
+			@Override
+			public boolean isDone(final G3MContext context) {
+				return true;
+			}
+		};
+
+		return initTask;
+	}
+
 }

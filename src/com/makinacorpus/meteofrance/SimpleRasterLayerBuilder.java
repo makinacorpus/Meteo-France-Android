@@ -63,10 +63,12 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 		layerSet.addLayer(ventLayer);
 
-		 final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90), Angle.fromDegrees(-180));
-		 final Geodetic2D upper = new Geodetic2D(Angle.fromDegrees(90), Angle.fromDegrees(180)); 
-		 final Sector demSector = new Sector(lower, upper);
-		 
+		final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90),
+				Angle.fromDegrees(-180));
+		final Geodetic2D upper = new Geodetic2D(Angle.fromDegrees(90),
+				Angle.fromDegrees(180));
+		final Sector demSector = new Sector(lower, upper);
+
 		final WMSLayer precipitationLayer = new WMSLayer(
 				"precipitation_amount_60mn", new URL(
 						"http://screamshot.makinacorpus.net/public/api/ogc/wms/radar/?token="
@@ -74,7 +76,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 				WMSServerVersion.WMS_1_3_0, demSector, "image/png",
 				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
-		precipitationLayer.setExtraParameter("BBOX=-90,-180,90,180");
+	    precipitationLayer.setExtraParameter("BBOX=-90,-180,90,180");
 		precipitationLayer.setTitle(ctx.getResources().getString(
 				R.string.precipitation_name));
 		precipitationLayer.setEnable(false);
@@ -83,5 +85,5 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 		return layerSet;
 	}
-//	-90.0,-180,90.0,180
+	// -90.0,-180,90.0,180
 }
