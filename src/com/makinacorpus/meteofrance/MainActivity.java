@@ -220,20 +220,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						} else {
 
 							layerToAdd.setEnable(false);
-							ArrayList<View> viewAll = getViewsByTag(layoutContainer);
-							int counter = 0;
-							for (View view2 : viewAll) {
-
-								if (view2.getTag().equals(
-										(String) view.getTag())) {
-									layoutContainer.removeView(view2);
-									listLayerActivated.remove(counter);
-									break;
-								} else
-									counter++;
-
-							}
-
+						
+							removeIconFromMap((String) view.getTag());
 						}
 					}
 				}
@@ -408,6 +396,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
+	
 
 			_placeHolder.addView(_g3mWidget);
 			if (progress.isShowing()) {
@@ -465,14 +454,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				final Layer layerToAdd = layerset
 						.getLayerByTitle(layerPrecepitationName);
 				layerToAdd.setEnable(false);
-				for (int i = 0; i < listLayerActivated.size(); i++) {
-					if (listLayerActivated.get(i)
-							.equals(layerPrecepitationName)) {
-						listLayerActivated.remove(i);
-						break;
-					}
-
-				}
+				
+				removeIconFromMap(layerPrecepitationName);
+				
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
@@ -563,5 +547,20 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		// DateFormat dateFormattime = new SimpleDateFormat("HH:00:00");
 
 		return dateFormat.format(actuelle) + "T15:00:00Z";
+	}
+	
+	private void removeIconFromMap(String tag){
+		ArrayList<View> viewAll = getViewsByTag(layoutContainer);
+		int counter = 0;
+		for (View view2 : viewAll) {
+
+			if (view2.getTag().equals(tag)) {
+				layoutContainer.removeView(view2);
+				listLayerActivated.remove(counter);
+				break;
+			} else
+				counter++;
+
+		}
 	}
 }
