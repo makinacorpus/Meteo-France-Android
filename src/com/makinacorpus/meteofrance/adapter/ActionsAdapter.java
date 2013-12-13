@@ -82,7 +82,9 @@ public class ActionsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		if (convertView == null) 
+		if (convertView == null) {
+			
+		
 					
 			convertView = mInflater.inflate(R.layout.action_list_item, parent,
 					false);
@@ -103,7 +105,8 @@ public class ActionsAdapter extends BaseAdapter {
 		convertView.setBackgroundDrawable(new ColorDrawable(convertView.getResources().getColor(mColor[position])));
 		convertView.setTag(mTitles[position]);
 		
-		convertView.setEnabled(false);
+		convertView.setEnabled(false);}
+		
 		return convertView;
 		
 		}

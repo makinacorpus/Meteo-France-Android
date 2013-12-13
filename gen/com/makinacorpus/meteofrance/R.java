@@ -54,18 +54,19 @@ public final class R {
         public static final int globe3d=0x7f020003;
         public static final int ic_drawer=0x7f020004;
         public static final int ic_launcher=0x7f020005;
-        public static final int menu_gris=0x7f020006;
-        public static final int meteo_france=0x7f020007;
-        public static final int neige=0x7f020008;
-        public static final int nuage=0x7f020009;
-        public static final int orage=0x7f02000a;
-        public static final int pluie=0x7f02000b;
-        public static final int select_menu=0x7f02000c;
-        public static final int soleil=0x7f02000d;
-        public static final int temperature=0x7f02000e;
-        public static final int trait_aprem=0x7f02000f;
-        public static final int trait_date=0x7f020010;
-        public static final int vents=0x7f020011;
+        public static final int ic_meteofrance=0x7f020006;
+        public static final int menu_gris=0x7f020007;
+        public static final int meteo_france=0x7f020008;
+        public static final int neige=0x7f020009;
+        public static final int nuage=0x7f02000a;
+        public static final int orage=0x7f02000b;
+        public static final int pluie=0x7f02000c;
+        public static final int select_menu=0x7f02000d;
+        public static final int soleil=0x7f02000e;
+        public static final int temperature=0x7f02000f;
+        public static final int trait_aprem=0x7f020010;
+        public static final int trait_date=0x7f020011;
+        public static final int vents=0x7f020012;
     }
     public static final class id {
         public static final int content_frame=0x7f0a0002;

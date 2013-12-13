@@ -150,7 +150,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			public void onDrawerClosed(View view) {
 
 				invalidateOptionsMenu();
-				getActionBar().setTitle("");
 
 			}
 
@@ -158,8 +157,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			public void onDrawerOpened(View drawerView) {
 
 				invalidateOptionsMenu();
-				getActionBar().setTitle(
-						getResources().getString(R.string.app_name));
+
 			}
 
 		};
@@ -182,12 +180,13 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (layerset != null) {
-					
-					int positionRollerDate= pagerDate.getCurrentItem();
+
+					int positionRollerDate = pagerDate.getCurrentItem();
 
 					final Layer layerToAdd = layerset
-							.getLayerByTitle((String) view.getTag()+"_"+positionRollerDate);
-		
+							.getLayerByTitle((String) view.getTag() + "_"
+									+ positionRollerDate);
+
 					if (layerToAdd != null) {
 						TextView txtContainer = (TextView) view
 								.findViewById(R.id.textLayer);
@@ -196,18 +195,19 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 								.getCompoundDrawables();
 
 						if (!layerToAdd.isEnable()) {
-//							Camera cameraaa = _g3mWidget.getNextCamera();
-//
-//							Geodetic3D geo2D = cameraaa.getGeodeticPosition();
-//							if (((String) view.getTag())
-//									.equals(layerPrecepitationName)
-//									&& geo2D._height > limit2D) {
-//								Toast.makeText(activityContext,
-//										layerNotAvalaible, Toast.LENGTH_LONG)
-//										.show();
-//								mDrawerLayout.closeDrawer(mDrawerList);
-//								return;
-//							}
+							// Camera cameraaa = _g3mWidget.getNextCamera();
+							//
+							// Geodetic3D geo2D =
+							// cameraaa.getGeodeticPosition();
+							// if (((String) view.getTag())
+							// .equals(layerPrecepitationName)
+							// && geo2D._height > limit2D) {
+							// Toast.makeText(activityContext,
+							// layerNotAvalaible, Toast.LENGTH_LONG)
+							// .show();
+							// mDrawerLayout.closeDrawer(mDrawerList);
+							// return;
+							// }
 							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
@@ -285,17 +285,17 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 
 			public void onPageSelected(int position) {
-			     layerset.disableAllLayers();
-			     layerset
-					.getLayerByTitle("globe").setEnable(true);
-					for (int i = 0; i < listLayerActivated.size(); i++) {
+				layerset.disableAllLayers();
+				layerset.getLayerByTitle("globe").setEnable(true);
+				for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
-							.getLayerByTitle(listLayerActivated.get(i)+"_"+position);
+							.getLayerByTitle(listLayerActivated.get(i) + "_"
+									+ position);
 					layerToAdd.setEnable(true);
 				}
-					userLocation = Utils.getCurrentLocation(activityContext);
-					_placeHolder.removeAllViews();
-					addMarkerPosition();
+				userLocation = Utils.getCurrentLocation(activityContext);
+
+				addMarkerPosition();
 			}
 		});
 		ViewPager pagerTime = mContainerTime.getViewPager();
@@ -369,11 +369,12 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			editor.putString("token", tokenToUse);
 			editor.commit();
 
-			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse, activityContext);
+			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
+					activityContext);
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
 			builder.setPlanet(Planet.createSphericalEarth());
-		
+
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
@@ -431,11 +432,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				item.setIcon(glob3Ddrawable);
 
 			} else {
-				final Layer layerToAdd = layerset
-						.getLayerByTitle(layerPrecepitationName);
-				layerToAdd.setEnable(false);
-
-				removeIconFromMap(layerPrecepitationName);
+				// final Layer layerToAdd = layerset
+				// .getLayerByTitle(layerPrecepitationName);
+				// layerToAdd.setEnable(false);
+				//
+				// removeIconFromMap(layerPrecepitationName);
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
@@ -510,7 +511,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		}
 	}
 
-
 	private void removeIconFromMap(String tag) {
 		ArrayList<View> viewAll = getViewsByTag(layoutContainer);
 		int counter = 0;
@@ -525,6 +525,5 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 		}
 	}
-
 
 }

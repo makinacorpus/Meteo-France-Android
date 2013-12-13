@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.glob3.mobile.generated.Angle;
-import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.LayerBuilder;
 import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.LevelTileCondition;
@@ -70,10 +68,6 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 	
 		}
 
-		
-
-	
-	
 		
 //		
 //		final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90),
