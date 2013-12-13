@@ -2,7 +2,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@android:color/black" >
 
     <!-- The main content view -->
 
@@ -16,7 +16,7 @@
             android:id="@+id/g3mWidgetHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@android:color/black"
             android:paddingBottom="50dp" >
         </RelativeLayout>
 
@@ -73,7 +73,7 @@
         android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="@color/blacktransparent"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"

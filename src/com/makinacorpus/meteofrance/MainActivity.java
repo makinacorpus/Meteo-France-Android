@@ -92,8 +92,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
-	private static final int to2DDistance = 10000;
-	private static final int to3DDistance = 25000000;
+	private static final int to2DDistance = 65000;
+	private static final int to3DDistance = 24000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
 
@@ -249,7 +249,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
 				builder.setBackgroundColor(Color
-						.fromRGBA255(255, 255, 255, 255));
+						.fromRGBA255(0, 0, 0, 0));
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				addMarkerPosition();
@@ -372,7 +372,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
 					activityContext);
 			builder = new G3MBuilder_Android(activityContext);
-			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
+			builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 			builder.setPlanet(Planet.createSphericalEarth());
 
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
