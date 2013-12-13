@@ -1,5 +1,10 @@
 package com.makinacorpus.meteofrance;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.LayerBuilder;
@@ -15,7 +20,7 @@ import android.content.Context;
 
 public class SimpleRasterLayerBuilder extends LayerBuilder {
 
-	public static LayerSet createLayerset(String tokenToUse, String dateToUse,
+	public static LayerSet createLayerset(String tokenToUse,
 			Context ctx) {
 		final LayerSet layerSet = new LayerSet();
 
@@ -27,63 +32,85 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		globeLyer.setTitle("globe");
 		globeLyer.setEnable(true);
 		layerSet.addLayer(globeLyer);
+		
+		for (int i = 0; i < 7; i++) {
+			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
+					"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
+							+ tokenToUse + "&time=" + formatDateToUniversel(i) + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
+					"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+					TimeInterval.fromDays(30), true);
+			tmpLyer.setTitle(ctx.getResources()
+					.getString(R.string.temperature_name)+"_"+i);
+			tmpLyer.setEnable(false);
 
-		final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-				"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
-						+ tokenToUse + "&time=" + dateToUse + "&", false),
-				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
-				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-				TimeInterval.fromDays(30), true);
-		tmpLyer.setTitle(ctx.getResources()
-				.getString(R.string.temperature_name));
-		tmpLyer.setEnable(false);
+			layerSet.addLayer(tmpLyer);
+			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
+					"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+							+ tokenToUse + "&time=" + formatDateToUniversel(i) + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
+					"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+					TimeInterval.fromDays(30), true);
+			ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name)+"_"+i);
+			ventLayer.setEnable(false);
 
-		layerSet.addLayer(tmpLyer);
+			layerSet.addLayer(ventLayer);
+			final WMSLayer cloudsLayer = new WMSLayer("geostationary_hrv_cloud",
+					new URL(
+							"http://screamshot.makina-corpus.net/public/api/ogc/wms/satellite/?token="
+									+ tokenToUse + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
+					"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+					TimeInterval.fromDays(30), true);
+			cloudsLayer.setTitle(ctx.getResources().getString(
+					R.string.couverture_name)+"_"+i);
+			cloudsLayer.setEnable(false);
 
-		final WMSLayer cloudsLayer = new WMSLayer("geostationary_hrv_cloud",
-				new URL(
-						"http://screamshot.makina-corpus.net/public/api/ogc/wms/satellite/?token="
-								+ tokenToUse + "&", false),
-				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
-				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-				TimeInterval.fromDays(30), true);
-		cloudsLayer.setTitle(ctx.getResources().getString(
-				R.string.couverture_name));
-		cloudsLayer.setEnable(false);
+			layerSet.addLayer(cloudsLayer);
+	
+		}
 
-		layerSet.addLayer(cloudsLayer);
-		final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-				"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
-						+ tokenToUse + "&time=" + dateToUse + "&", false),
-				WMSServerVersion.WMS_1_3_0, Sector.fullSphere(), "image/png",
-				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-				TimeInterval.fromDays(30), true);
-		ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name));
-		ventLayer.setEnable(false);
+		
 
-		layerSet.addLayer(ventLayer);
-
-		final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90),
-				Angle.fromDegrees(-180));
-		final Geodetic2D upper = new Geodetic2D(Angle.fromDegrees(90),
-				Angle.fromDegrees(180));
-		final Sector demSector = new Sector(lower, upper);
-
-		final WMSLayer precipitationLayer = new WMSLayer(
-				"precipitation_amount_60mn", new URL(
-						"http://screamshot.makinacorpus.net/public/api/ogc/wms/radar/?token="
-								+ tokenToUse + "&", false),
-				WMSServerVersion.WMS_1_3_0, demSector, "image/png",
-				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-				TimeInterval.fromDays(30), true);
-	    precipitationLayer.setExtraParameter("BBOX=-90,-180,90,180");
-		precipitationLayer.setTitle(ctx.getResources().getString(
-				R.string.precipitation_name));
-		precipitationLayer.setEnable(false);
-
-		layerSet.addLayer(precipitationLayer);
+	
+	
+		
+//		
+//		final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90),
+//				Angle.fromDegrees(-180));
+//		final Geodetic2D upper = new Geodetic2D(Angle.fromDegrees(90),
+//				Angle.fromDegrees(180));
+//		final Sector demSector = new Sector(lower, upper);
+//
+//		final WMSLayer precipitationLayer = new WMSLayer(
+//				"precipitation_amount_60mn", new URL(
+//						"http://screamshot.makinacorpus.net/public/api/ogc/wms/radar/?token="
+//								+ tokenToUse + "&", false),
+//				WMSServerVersion.WMS_1_3_0, demSector, "image/png",
+//				"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+//				TimeInterval.fromDays(30), true);
+//	    precipitationLayer.setExtraParameter("BBOX=-90,-180,90,180");
+//		precipitationLayer.setTitle(ctx.getResources().getString(
+//				R.string.precipitation_name));
+//		precipitationLayer.setEnable(false);
+//
+//		layerSet.addLayer(precipitationLayer);
 
 		return layerSet;
+	}
+	
+	private static String formatDateToUniversel(int position) {
+		Locale locale = Locale.getDefault();
+		Date actuelle = new Date();
+		if (position == 0)
+			actuelle.setHours(actuelle.getHours());
+		else
+			actuelle.setHours(actuelle.getHours() + 24 * position);
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// DateFormat dateFormattime = new SimpleDateFormat("HH:00:00");
+
+		return dateFormat.format(actuelle) + "T15:00:00Z";
 	}
 	// -90.0,-180,90.0,180
 }

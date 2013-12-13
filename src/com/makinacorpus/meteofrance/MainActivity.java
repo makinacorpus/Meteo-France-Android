@@ -76,6 +76,7 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 @SuppressLint("NewApi")
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
+	ViewPager pagerDate;
 	MarksRenderer userMarkers = new MarksRenderer(false);
 	private static final int limit2D = 290000;
 	ArrayList<String> listLayerActivated;
@@ -181,12 +182,12 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				if (layerset != null) {
-					Camera cameraaa = _g3mWidget.getNextCamera();
-
-					Geodetic3D geo2D = cameraaa.getGeodeticPosition();
+					
+					int positionRollerDate= pagerDate.getCurrentItem();
 
 					final Layer layerToAdd = layerset
-							.getLayerByTitle((String) view.getTag());
+							.getLayerByTitle((String) view.getTag()+"_"+positionRollerDate);
+		
 					if (layerToAdd != null) {
 						TextView txtContainer = (TextView) view
 								.findViewById(R.id.textLayer);
@@ -195,15 +196,18 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 								.getCompoundDrawables();
 
 						if (!layerToAdd.isEnable()) {
-							if (((String) view.getTag())
-									.equals(layerPrecepitationName)
-									&& geo2D._height > limit2D) {
-								Toast.makeText(activityContext,
-										layerNotAvalaible, Toast.LENGTH_LONG)
-										.show();
-								mDrawerLayout.closeDrawer(mDrawerList);
-								return;
-							}
+//							Camera cameraaa = _g3mWidget.getNextCamera();
+//
+//							Geodetic3D geo2D = cameraaa.getGeodeticPosition();
+//							if (((String) view.getTag())
+//									.equals(layerPrecepitationName)
+//									&& geo2D._height > limit2D) {
+//								Toast.makeText(activityContext,
+//										layerNotAvalaible, Toast.LENGTH_LONG)
+//										.show();
+//								mDrawerLayout.closeDrawer(mDrawerList);
+//								return;
+//							}
 							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
@@ -242,8 +246,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			if (!Utils.settings.getString("token", "").equals("")) {
 
 				layerset = SimpleRasterLayerBuilder.createLayerset(
-						Utils.settings.getString("token", ""),
-						formatDateToUniversel(0), activityContext);
+						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
 				builder.setBackgroundColor(Color
 						.fromRGBA255(255, 255, 255, 255));
@@ -260,20 +263,20 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 		}
 		userLocation = Utils.getCurrentLocation(this);
-		ViewPager pager = mContainerDay.getViewPager();
+		pagerDate = mContainerDay.getViewPager();
 		mPagerAdapterDay = new MyPagerAdapterDay(this, this);
-		pager.setAdapter(mPagerAdapterDay);
+		pagerDate.setAdapter(mPagerAdapterDay);
 		// Necessary or the pager will only have one extra page to show
 		// make this at least however many pages you can see
-		pager.setOffscreenPageLimit(mPagerAdapterDay.getCount());
+		pagerDate.setOffscreenPageLimit(mPagerAdapterDay.getCount());
 		// A little space between pages
-		pager.setPageMargin(10);
+		pagerDate.setPageMargin(10);
 
 		// If hardware acceleration is enabled, you should also remove
 		// clipping on the pager for its children.
-		pager.setClipChildren(false);
+		pagerDate.setClipChildren(false);
 
-		pager.setOnPageChangeListener(new OnPageChangeListener() {
+		pagerDate.setOnPageChangeListener(new OnPageChangeListener() {
 			public void onPageScrollStateChanged(int state) {
 			}
 
@@ -282,40 +285,17 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			}
 
 			public void onPageSelected(int position) {
-				// Check if this is the page you want.
-				Camera cameraaa = _g3mWidget.getNextCamera();
-
-				Geodetic3D geo2D = cameraaa.getGeodeticPosition();
-
-				userLocation = Utils.getCurrentLocation(activityContext);
-				_placeHolder.removeAllViews();
-				layerset = SimpleRasterLayerBuilder.createLayerset(
-						Utils.settings.getString("token", ""),
-						formatDateToUniversel(position), activityContext);
-				builder = new G3MBuilder_Android(activityContext);
-				builder.setBackgroundColor(Color
-						.fromRGBA255(255, 255, 255, 255));
-				builder.setPlanet(Planet.createSphericalEarth());
-				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				addMarkerPosition();
-
-				_g3mWidget = builder.createWidget();
-
-				_placeHolder.addView(_g3mWidget);
-
-				for (int i = 0; i < listLayerActivated.size(); i++) {
+			     layerset.disableAllLayers();
+			     layerset
+					.getLayerByTitle("globe").setEnable(true);
+					for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
-							.getLayerByTitle(listLayerActivated.get(i));
+							.getLayerByTitle(listLayerActivated.get(i)+"_"+position);
 					layerToAdd.setEnable(true);
 				}
-				Camera cameraNEwPoisiton = _g3mWidget.getNextCamera();
-
-				Geodetic3D geo2DNewPosition = cameraNEwPoisiton
-						.getGeodeticPosition();
-				if (!geo2DNewPosition.isEquals(geo2D)) {
-					_g3mWidget.setAnimatedCameraPosition(geo2D);
-				}
-
+					userLocation = Utils.getCurrentLocation(activityContext);
+					_placeHolder.removeAllViews();
+					addMarkerPosition();
 			}
 		});
 		ViewPager pagerTime = mContainerTime.getViewPager();
@@ -389,12 +369,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			editor.putString("token", tokenToUse);
 			editor.commit();
 
-			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse,
-					formatDateToUniversel(0), activityContext);
+			layerset = SimpleRasterLayerBuilder.createLayerset(tokenToUse, activityContext);
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(255, 255, 255, 255));
 			builder.setPlanet(Planet.createSphericalEarth());
-			builder.setInitializationTask(initialisationTask());
+		
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
@@ -531,19 +510,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		}
 	}
 
-	private String formatDateToUniversel(int position) {
-		Locale locale = Locale.getDefault();
-		Date actuelle = new Date();
-		if (position == 0)
-			actuelle.setHours(actuelle.getHours());
-		else
-			actuelle.setHours(actuelle.getHours() + 24 * position);
-
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		// DateFormat dateFormattime = new SimpleDateFormat("HH:00:00");
-
-		return dateFormat.format(actuelle) + "T15:00:00Z";
-	}
 
 	private void removeIconFromMap(String tag) {
 		ArrayList<View> viewAll = getViewsByTag(layoutContainer);
@@ -560,21 +526,5 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		}
 	}
 
-	private GInitializationTask initialisationTask() {
-
-		final GInitializationTask initTask = new GInitializationTask() {
-			@Override
-			public void run(final G3MContext context) {
-
-			}
-
-			@Override
-			public boolean isDone(final G3MContext context) {
-				return true;
-			}
-		};
-
-		return initTask;
-	}
 
 }
