@@ -43,30 +43,30 @@ public class MyPagerAdapterDay extends PagerAdapter {
 		case 2:
 
 			view.setText(String.format("%tA", rightNow) + " "
-					+ rightNow.get(Calendar.DAY_OF_MONTH) + " "
+					+ rightNow.get(Calendar.DAY_OF_MONTH) + "\n"
 					+ String.format("%tB", rightNow));
 			break;
 		case 3:
 
 			view.setText(String.format("%tA", rightNow) + " "
-					+ rightNow.get(Calendar.DAY_OF_MONTH) + " "
+					+ rightNow.get(Calendar.DAY_OF_MONTH) + "\n"
 					+ String.format("%tB", rightNow));
 			break;
 		case 4:
 
 			view.setText(String.format("%tA", rightNow) + " "
-					+ rightNow.get(Calendar.DAY_OF_MONTH) + " "
+					+ rightNow.get(Calendar.DAY_OF_MONTH) + "\n"
 					+ String.format("%tB", rightNow));
 			break;
 		case 5:
 
 			view.setText(String.format("%tA", rightNow) + " "
-					+ rightNow.get(Calendar.DAY_OF_MONTH) + " "
+					+ rightNow.get(Calendar.DAY_OF_MONTH) + "\n"
 					+ String.format("%tB", rightNow));
 			break;
 		case 6:
 			view.setText(String.format("%tA", rightNow) + " "
-					+ rightNow.get(Calendar.DAY_OF_MONTH) + " "
+					+ rightNow.get(Calendar.DAY_OF_MONTH) + "\n"
 					+ String.format("%tB", rightNow));
 			
 			break;

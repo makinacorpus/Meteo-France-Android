@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/text_day"
-        android:layout_width="170dp"
+        android:layout_width="140dp"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:gravity="center"

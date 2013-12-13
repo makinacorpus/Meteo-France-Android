@@ -369,6 +369,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			progress = new ProgressDialog(activityContext);
+			progress.setCancelable(false);
+			progress.setCanceledOnTouchOutside(false);
 			progress.setMessage(tokenLoading);
 			progress.show();
 		}
