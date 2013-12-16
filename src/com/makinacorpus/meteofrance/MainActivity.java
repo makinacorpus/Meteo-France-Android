@@ -76,7 +76,7 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 @SuppressLint("NewApi")
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
-	ViewPager pagerDate;
+	ViewPager pagerDate, pagerHour;
 	MarksRenderer userMarkers = new MarksRenderer(false);
 	private static final int limit2D = 290000;
 	ArrayList<String> listLayerActivated;
@@ -182,10 +182,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				if (layerset != null) {
 
 					int positionRollerDate = pagerDate.getCurrentItem();
+					int positionRollerHour = pagerHour.getCurrentItem();
 
 					final Layer layerToAdd = layerset
 							.getLayerByTitle((String) view.getTag() + "_"
-									+ positionRollerDate);
+									+ positionRollerDate+"_"+positionRollerHour);
 
 					if (layerToAdd != null) {
 						TextView txtContainer = (TextView) view
@@ -219,7 +220,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 													activityContext)));
 							imagetoAdd.setTag((String) view.getTag());
 							layoutContainer.addView(imagetoAdd);
-
+							layerToAdd.initialize(_g3mWidget.getG3MContext());
 							layerToAdd.setEnable(true);
 
 						} else {
@@ -248,8 +249,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				layerset = SimpleRasterLayerBuilder.createLayerset(
 						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
-				builder.setBackgroundColor(Color
-						.fromRGBA255(0, 0, 0, 0));
+				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				addMarkerPosition();
@@ -290,6 +290,44 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
 							.getLayerByTitle(listLayerActivated.get(i) + "_"
+									+ position + "_"
+									+ pagerHour.getCurrentItem());
+					layerToAdd.setEnable(true);
+				}
+				userLocation = Utils.getCurrentLocation(activityContext);
+
+				addMarkerPosition();
+			}
+		});
+		pagerHour = mContainerTime.getViewPager();
+		mPagerAdapterTime = new MyPagerAdapterTime(this, this);
+		pagerHour.setAdapter(mPagerAdapterTime);
+
+		// Necessary or the pager will only have one extra page to show
+		// make this at least however many pages you can see
+		pagerHour.setOffscreenPageLimit(mPagerAdapterTime.getCount());
+		// A little space between pages
+		pagerHour.setPageMargin(0);
+
+		// If hardware acceleration is enabled, you should also remove
+		// clipping on the pager for its children.
+		pagerHour.setClipChildren(false);
+
+		pagerHour.setOnPageChangeListener(new OnPageChangeListener() {
+			public void onPageScrollStateChanged(int state) {
+			}
+
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
+			}
+
+			public void onPageSelected(int position) {
+				layerset.disableAllLayers();
+				layerset.getLayerByTitle("globe").setEnable(true);
+				for (int i = 0; i < listLayerActivated.size(); i++) {
+					final Layer layerToAdd = layerset
+							.getLayerByTitle(listLayerActivated.get(i) + "_"
+									+ pagerDate.getCurrentItem() + "_"
 									+ position);
 					layerToAdd.setEnable(true);
 				}
@@ -298,19 +336,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				addMarkerPosition();
 			}
 		});
-		ViewPager pagerTime = mContainerTime.getViewPager();
-		mPagerAdapterTime = new MyPagerAdapterTime(this, this);
-		pagerTime.setAdapter(mPagerAdapterTime);
-
-		// Necessary or the pager will only have one extra page to show
-		// make this at least however many pages you can see
-		pagerTime.setOffscreenPageLimit(mPagerAdapterTime.getCount());
-		// A little space between pages
-		pagerTime.setPageMargin(0);
-
-		// If hardware acceleration is enabled, you should also remove
-		// clipping on the pager for its children.
-		pagerTime.setClipChildren(false);
 
 	}
 
