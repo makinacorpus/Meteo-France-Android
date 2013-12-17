@@ -17,6 +17,7 @@ import org.glob3.mobile.generated.Camera;
 import org.glob3.mobile.generated.Color;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
+import org.glob3.mobile.generated.ICameraConstrainer;
 import org.glob3.mobile.generated.Layer;
 import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Mark;
@@ -249,6 +250,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
+			
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				addMarkerPosition();
@@ -397,8 +399,30 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder = new G3MBuilder_Android(activityContext);
 			builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 			builder.setPlanet(Planet.createSphericalEarth());
-
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
+			
+			builder.addCameraConstraint(new ICameraConstrainer() {
+				
+				@Override
+				public boolean onCameraChange(Planet planet, Camera previousCamera,
+						Camera nextCamera) {
+					// TODO Auto-generated method stub
+				
+					Geodetic3D geo2D = nextCamera.getGeodeticPosition();
+					if(geo2D._height < limit2D){
+						nextCamera.setHeading(Angle.zero());
+					}
+				
+			
+					return false;
+				}
+				
+				@Override
+				public void dispose() {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
 			_placeHolder.addView(_g3mWidget);
@@ -452,6 +476,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to2DDistance));
+			
 				item.setIcon(glob3Ddrawable);
 
 			} else {
@@ -555,10 +580,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				
 				// TODO Auto-generated method stub
 
 				Camera camera = _g3mWidget.getNextCamera();
+				
 				Geodetic3D geo2D = camera.getGeodeticPosition();
+			
+			
+			
 				if (geo2D._height < limit2D) {
 
 					menuToManage.findItem(R.id.switchViewItem).setIcon(
@@ -573,6 +603,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				return false;
 			}
 		});
+		
 	}
 
 }
