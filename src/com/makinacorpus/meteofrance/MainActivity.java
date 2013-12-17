@@ -2,11 +2,7 @@ package com.makinacorpus.meteofrance;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,8 +15,6 @@ import org.glob3.mobile.generated.AltitudeMode;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Camera;
 import org.glob3.mobile.generated.Color;
-import org.glob3.mobile.generated.G3MContext;
-import org.glob3.mobile.generated.GInitializationTask;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.Layer;
@@ -53,7 +47,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -77,8 +73,9 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	ViewPager pagerDate, pagerHour;
+	Menu menuToManage;
 	MarksRenderer userMarkers = new MarksRenderer(false);
-	private static final int limit2D = 290000;
+	private static final int limit2D = 7000000;
 	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
@@ -125,9 +122,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	String layerNotAvalaible;
 	@InjectResource(R.string.precipitation_name)
 	String layerPrecepitationName;
-	@InjectResource (R.drawable.check_off) Drawable chechOffDrawable;
-	@InjectResource (R.drawable.check_on) Drawable chechOnDrawable;
-	
+	@InjectResource(R.drawable.check_off)
+	Drawable chechOffDrawable;
+	@InjectResource(R.drawable.check_on)
+	Drawable chechOnDrawable;
+
 	Angle latitudeA;
 	Angle longitudeA;
 	Location userLocation;
@@ -193,7 +192,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 					final Layer layerToAdd = layerset
 							.getLayerByTitle((String) view.getTag() + "_"
-									+ positionRollerDate+"_"+positionRollerHour);
+									+ positionRollerDate + "_"
+									+ positionRollerHour);
 
 					if (layerToAdd != null) {
 						TextView txtContainer = (TextView) view
@@ -201,10 +201,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 						Drawable[] drawablesCoumpounds = txtContainer
 								.getCompoundDrawables();
-					
 
 						if (!layerToAdd.isEnable()) {
-							txtContainer.setCompoundDrawables(drawablesCoumpounds[0], null,chechOnDrawable, null);
+							txtContainer.setCompoundDrawables(
+									drawablesCoumpounds[0], null,
+									chechOnDrawable, null);
 							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
@@ -220,7 +221,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 							layerToAdd.setEnable(true);
 
 						} else {
-							txtContainer.setCompoundDrawables(drawablesCoumpounds[0], null,chechOffDrawable, null);
+							txtContainer.setCompoundDrawables(
+									drawablesCoumpounds[0], null,
+									chechOffDrawable, null);
 							layerToAdd.setEnable(false);
 
 							removeIconFromMap((String) view.getTag());
@@ -250,6 +253,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
+				activeUpdateIconWhenTouch();
 
 				_placeHolder.addView(_g3mWidget);
 
@@ -292,7 +296,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				}
 				userLocation = Utils.getCurrentLocation(activityContext);
 
-			
 			}
 		});
 		pagerHour = mContainerTime.getViewPager();
@@ -329,7 +332,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				}
 				userLocation = Utils.getCurrentLocation(activityContext);
 
-				
 			}
 		});
 
@@ -399,9 +401,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
-			
-
 			_placeHolder.addView(_g3mWidget);
+			activeUpdateIconWhenTouch();
+
 			if (progress.isShowing()) {
 				progress.dismiss();
 			}
@@ -444,7 +446,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			}
 			Camera cameraaa = _g3mWidget.getNextCamera();
-
 			Geodetic3D geo2D = cameraaa.getGeodeticPosition();
 
 			if (geo2D._height > limit2D) {
@@ -495,6 +496,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.popup, menu);
+		menuToManage = menu;
 		return true;
 	}
 
@@ -546,6 +548,31 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				counter++;
 
 		}
+	}
+
+	private void activeUpdateIconWhenTouch() {
+		_g3mWidget.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+
+				Camera camera = _g3mWidget.getNextCamera();
+				Geodetic3D geo2D = camera.getGeodeticPosition();
+				if (geo2D._height < limit2D) {
+
+					menuToManage.findItem(R.id.switchViewItem).setIcon(
+							glob3Ddrawable);
+
+				} else {
+
+					menuToManage.findItem(R.id.switchViewItem).setIcon(
+							glob2Ddrawable);
+
+				}
+				return false;
+			}
+		});
 	}
 
 }
