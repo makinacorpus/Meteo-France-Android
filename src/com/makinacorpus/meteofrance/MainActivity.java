@@ -253,6 +253,28 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				builder.addCameraConstraint(new ICameraConstrainer() {
+					
+					@Override
+					public boolean onCameraChange(Planet planet, Camera previousCamera,
+							Camera nextCamera) {
+						// TODO Auto-generated method stub
+					
+						Geodetic3D geo2D = nextCamera.getGeodeticPosition();
+						if(geo2D._height < limit2D){
+							nextCamera.setHeading(Angle.zero());
+						}
+					
+				
+						return false;
+					}
+					
+					@Override
+					public void dispose() {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
 				activeUpdateIconWhenTouch();
