@@ -92,8 +92,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
-	private static final int to2DDistance = 65000;
-	private static final int to3DDistance = 24000000;
+	private static final int to2DDistance = 55000;
+	private static final int to3DDistance = 26000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
 
@@ -125,6 +125,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	String layerNotAvalaible;
 	@InjectResource(R.string.precipitation_name)
 	String layerPrecepitationName;
+	@InjectResource (R.drawable.check_off) Drawable chechOffDrawable;
+	@InjectResource (R.drawable.check_on) Drawable chechOnDrawable;
+	
 	Angle latitudeA;
 	Angle longitudeA;
 	Location userLocation;
@@ -173,6 +176,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		// Enabling Up navigation
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		activityContext = this;
+		chechOffDrawable.setBounds(0, 0, chechOffDrawable.getIntrinsicWidth(),
+				chechOffDrawable.getIntrinsicHeight());
+		chechOnDrawable.setBounds(0, 0, chechOnDrawable.getIntrinsicWidth(),
+				chechOnDrawable.getIntrinsicHeight());
 		// Setting item click listener for the listview mDrawerList
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
@@ -194,21 +201,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 						Drawable[] drawablesCoumpounds = txtContainer
 								.getCompoundDrawables();
+					
 
 						if (!layerToAdd.isEnable()) {
-							// Camera cameraaa = _g3mWidget.getNextCamera();
-							//
-							// Geodetic3D geo2D =
-							// cameraaa.getGeodeticPosition();
-							// if (((String) view.getTag())
-							// .equals(layerPrecepitationName)
-							// && geo2D._height > limit2D) {
-							// Toast.makeText(activityContext,
-							// layerNotAvalaible, Toast.LENGTH_LONG)
-							// .show();
-							// mDrawerLayout.closeDrawer(mDrawerList);
-							// return;
-							// }
+							txtContainer.setCompoundDrawables(drawablesCoumpounds[0], null,chechOnDrawable, null);
 							listLayerActivated.add((String) view.getTag());
 							ImageView imagetoAdd;
 							imagetoAdd = new ImageView(view.getContext());
@@ -224,7 +220,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 							layerToAdd.setEnable(true);
 
 						} else {
-
+							txtContainer.setCompoundDrawables(drawablesCoumpounds[0], null,chechOffDrawable, null);
 							layerToAdd.setEnable(false);
 
 							removeIconFromMap((String) view.getTag());
@@ -296,7 +292,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				}
 				userLocation = Utils.getCurrentLocation(activityContext);
 
-				addMarkerPosition();
+			
 			}
 		});
 		pagerHour = mContainerTime.getViewPager();
@@ -333,7 +329,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				}
 				userLocation = Utils.getCurrentLocation(activityContext);
 
-				addMarkerPosition();
+				
 			}
 		});
 
@@ -403,6 +399,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
+			
 
 			_placeHolder.addView(_g3mWidget);
 			if (progress.isShowing()) {

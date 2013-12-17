@@ -24,8 +24,9 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		final int amIndicator = 1;
 		final int soirIndicator = 2;
 
-		final WMSLayer globeLyer = new WMSLayer("openstreetmap", new URL(
-				"http://maps.opengeo.org/geowebcache/service/wms?", false),
+		final WMSLayer globeLyer = new WMSLayer("physicalmap", new URL(
+				"http://synchrone.meteo.fr/public/api/ogc/wms/raster_basemap/?token="
+						+ tokenToUse + "&", false),
 				WMSServerVersion.WMS_1_1_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", false, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
@@ -37,7 +38,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			// définition des Layer set du matin
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, matinIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -50,7 +51,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, matinIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -63,7 +64,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			layerSet.addLayer(ventLayer);
 			final WMSLayer cloudsLayer = new WMSLayer(
 					"geostationary_hrv_cloud", new URL(
-							"http://screamshot.makina-corpus.net/public/api/ogc/wms/satellite/?token="
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
@@ -81,7 +82,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			// définition des Layer set de AM
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, amIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -94,7 +95,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, amIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -107,7 +108,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			layerSet.addLayer(ventLayer);
 			final WMSLayer cloudsLayer = new WMSLayer(
 					"geostationary_hrv_cloud", new URL(
-							"http://screamshot.makina-corpus.net/public/api/ogc/wms/satellite/?token="
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
@@ -126,7 +127,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			// définition des Layer set du soir
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://screamshot.makina-corpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, soirIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -139,7 +140,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://screamshot.makinacorpus.net/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, soirIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -152,7 +153,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			layerSet.addLayer(ventLayer);
 			final WMSLayer cloudsLayer = new WMSLayer(
 					"geostationary_hrv_cloud", new URL(
-							"http://screamshot.makina-corpus.net/public/api/ogc/wms/satellite/?token="
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(

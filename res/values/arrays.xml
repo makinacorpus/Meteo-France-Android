@@ -16,10 +16,10 @@
         <item>@string/temperature_name</item>
         <item>@string/vent_name</item>
         <item>@string/couverture_name</item>
-        <item>@string/adefinir</item>
-        <item>@string/adefinir</item>
-        <item>@string/adefinir</item>
-        <item>@string/adefinir</item>
+<!--         <item>@string/adefinir</item> -->
+<!--         <item>@string/adefinir</item> -->
+<!--         <item>@string/adefinir</item> -->
+<!--         <item>@string/adefinir</item> -->
     </string-array>
     <string-array name="actions_color">
         <item>@color/soleilcolor</item>
