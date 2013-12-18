@@ -74,6 +74,8 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	ViewPager pagerDate, pagerHour;
+	private static final String nomLayer3D = "globe3D";
+	private static final String nomLayer2D = "globe2D";
 	Menu menuToManage;
 	MarksRenderer userMarkers = new MarksRenderer(false);
 	private static final int limit2D = 7000000;
@@ -250,29 +252,27 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						Utils.settings.getString("token", ""), activityContext);
 				builder = new G3MBuilder_Android(activityContext);
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
-			
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 				builder.addCameraConstraint(new ICameraConstrainer() {
-					
+
 					@Override
-					public boolean onCameraChange(Planet planet, Camera previousCamera,
-							Camera nextCamera) {
+					public boolean onCameraChange(Planet planet,
+							Camera previousCamera, Camera nextCamera) {
 						// TODO Auto-generated method stub
-					
+
 						Geodetic3D geo2D = nextCamera.getGeodeticPosition();
-						if(geo2D._height < limit2D){
+						if (geo2D._height < limit2D) {
 							nextCamera.setHeading(Angle.zero());
 						}
-					
-				
+
 						return false;
 					}
-					
+
 					@Override
 					public void dispose() {
 						// TODO Auto-generated method stub
-						
+
 					}
 				});
 				addMarkerPosition();
@@ -310,7 +310,20 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			public void onPageSelected(int position) {
 				layerset.disableAllLayers();
-				layerset.getLayerByTitle("globe").setEnable(true);
+				Camera camera = _g3mWidget.getNextCamera();
+
+				Geodetic3D geo2D = camera.getGeodeticPosition();
+
+				if (geo2D._height < limit2D) {
+					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
+
+				} else {
+
+					layerset.getLayerByTitle(nomLayer2D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer3D).setEnable(true);
+
+				}
 				for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
 							.getLayerByTitle(listLayerActivated.get(i) + "_"
@@ -346,7 +359,19 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			public void onPageSelected(int position) {
 				layerset.disableAllLayers();
-				layerset.getLayerByTitle("globe").setEnable(true);
+				Camera camera = _g3mWidget.getNextCamera();
+
+				Geodetic3D geo2D = camera.getGeodeticPosition();
+				if (geo2D._height < limit2D) {
+					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
+
+				} else {
+
+					layerset.getLayerByTitle(nomLayer2D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer3D).setEnable(true);
+
+				}
 				for (int i = 0; i < listLayerActivated.size(); i++) {
 					final Layer layerToAdd = layerset
 							.getLayerByTitle(listLayerActivated.get(i) + "_"
@@ -422,27 +447,26 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 			builder.setPlanet(Planet.createSphericalEarth());
 			builder.getPlanetRendererBuilder().setLayerSet(layerset);
-			
+
 			builder.addCameraConstraint(new ICameraConstrainer() {
-				
+
 				@Override
-				public boolean onCameraChange(Planet planet, Camera previousCamera,
-						Camera nextCamera) {
+				public boolean onCameraChange(Planet planet,
+						Camera previousCamera, Camera nextCamera) {
 					// TODO Auto-generated method stub
-				
+
 					Geodetic3D geo2D = nextCamera.getGeodeticPosition();
-					if(geo2D._height < limit2D){
+					if (geo2D._height < limit2D) {
 						nextCamera.setHeading(Angle.zero());
 					}
-				
-			
+
 					return false;
 				}
-				
+
 				@Override
 				public void dispose() {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
 			addMarkerPosition();
@@ -498,7 +522,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to2DDistance));
-			
+				layerset.getLayerByTitle(nomLayer3D).setEnable(false);
+				layerset.getLayerByTitle(nomLayer2D).setEnable(true);
 				item.setIcon(glob3Ddrawable);
 
 			} else {
@@ -507,7 +532,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				// layerToAdd.setEnable(false);
 				//
 				// removeIconFromMap(layerPrecepitationName);
-
+				layerset.getLayerByTitle(nomLayer3D).setEnable(true);
+				layerset.getLayerByTitle(nomLayer2D).setEnable(false);
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
 				item.setIcon(glob2Ddrawable);
@@ -598,20 +624,22 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	}
 
 	private void activeUpdateIconWhenTouch() {
+		// Pour gérer l'icone de l'actionBAr en fonction de zoom de
+		// l'utilisateur
 		_g3mWidget.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				// TODO Auto-generated method stub
 
 				Camera camera = _g3mWidget.getNextCamera();
-				
+
 				Geodetic3D geo2D = camera.getGeodeticPosition();
-			
-			
-			
+
 				if (geo2D._height < limit2D) {
+					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
 
 					menuToManage.findItem(R.id.switchViewItem).setIcon(
 							glob3Ddrawable);
@@ -620,12 +648,14 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 					menuToManage.findItem(R.id.switchViewItem).setIcon(
 							glob2Ddrawable);
+					layerset.getLayerByTitle(nomLayer2D).setEnable(false);
+					layerset.getLayerByTitle(nomLayer3D).setEnable(true);
 
 				}
 				return false;
 			}
 		});
-		
+
 	}
 
 }

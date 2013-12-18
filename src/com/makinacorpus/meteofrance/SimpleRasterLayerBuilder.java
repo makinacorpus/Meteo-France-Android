@@ -24,25 +24,34 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		final int amIndicator = 1;
 		final int soirIndicator = 2;
 
-		final WMSLayer globeLyer = new WMSLayer("physicalmap", new URL(
+		final WMSLayer globeLyer3D = new WMSLayer("physicalmap", new URL(
 				"http://synchrone.meteo.fr/public/api/ogc/wms/raster_basemap/?token="
 						+ tokenToUse + "&", false),
 				WMSServerVersion.WMS_1_1_0, Sector.fullSphere(), "image/png",
 				"EPSG:4326", "", false, new LevelTileCondition(0, 18),
 				TimeInterval.fromDays(30), true);
-		globeLyer.setTitle("globe");
-		globeLyer.setEnable(true);
-		layerSet.addLayer(globeLyer);
+		globeLyer3D.setTitle("globe3D");
+		globeLyer3D.setEnable(true);
+		layerSet.addLayer(globeLyer3D);
+		
+		final WMSLayer globeLyer2D = new WMSLayer("openstreetmap", new URL(
+				"http://maps.opengeo.org/geowebcache/service/wms?", false),
+				WMSServerVersion.WMS_1_1_0, Sector.fullSphere(), "image/png",
+				"EPSG:4326", "", false, new LevelTileCondition(0, 18),
+				TimeInterval.fromDays(30), true);
+		globeLyer2D.setTitle("globe2D");
+		globeLyer2D.setEnable(false);
+		layerSet.addLayer(globeLyer2D);
 
 		for (int i = 0; i < 7; i++) {
 
 			// définition des Layer set du matin
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, matinIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
@@ -51,7 +60,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, matinIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -82,11 +91,11 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			// définition des Layer set de AM
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, amIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
@@ -95,7 +104,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, amIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
@@ -127,11 +136,11 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			// définition des Layer set du soir
 			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, soirIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
@@ -140,7 +149,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(tmpLyer);
 			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?token="
+					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
 							+ tokenToUse + "&time="
 							+ formatDateToUniversel(i, soirIndicator) + "&",
 					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),

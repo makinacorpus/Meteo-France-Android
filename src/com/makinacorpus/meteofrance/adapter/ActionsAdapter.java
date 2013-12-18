@@ -83,37 +83,32 @@ public class ActionsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 
 		if (convertView == null) {
-			
-		
-					
+
 			convertView = mInflater.inflate(R.layout.action_list_item, parent,
 					false);
-		
 
-	
-		  TextView text = (TextView) convertView
-					.findViewById(R.id.textLayer);
-		
+			TextView text = (TextView) convertView.findViewById(R.id.textLayer);
 
-		final Drawable icon = convertView.getContext().getResources()
-				.getDrawable(mIcons[position]);
-		final Drawable iconOff = convertView.getContext().getResources()
-				.getDrawable(R.drawable.check_off);
-		icon.setBounds(0, 0, icon.getIntrinsicWidth(),
-				icon.getIntrinsicHeight());
-		iconOff.setBounds(0, 0, iconOff.getIntrinsicWidth(),
-				iconOff.getIntrinsicHeight());
-		text.setCompoundDrawables(icon, null,iconOff, null);
-		text.setText(mTitles[position]);
-	
-		convertView.setBackgroundDrawable(new ColorDrawable(convertView.getResources().getColor(mColor[position])));
-		convertView.setTag(mTitles[position]);
-		
-		convertView.setEnabled(false);}
-		
-		return convertView;
-		
+			final Drawable icon = convertView.getContext().getResources()
+					.getDrawable(mIcons[position]);
+			final Drawable iconOff = convertView.getContext().getResources()
+					.getDrawable(R.drawable.check_off);
+			icon.setBounds(0, 0, icon.getIntrinsicWidth(),
+					icon.getIntrinsicHeight());
+			iconOff.setBounds(0, 0, iconOff.getIntrinsicWidth(),
+					iconOff.getIntrinsicHeight());
+			text.setCompoundDrawables(icon, null, iconOff, null);
+			text.setText(mTitles[position]);
+
+			convertView.setBackgroundDrawable(new ColorDrawable(convertView
+					.getResources().getColor(mColor[position])));
+			convertView.setTag(mTitles[position]);
+
+			convertView.setEnabled(false);
 		}
-		
-	
+
+		return convertView;
+
+	}
+
 }
