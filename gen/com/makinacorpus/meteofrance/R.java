@@ -11,10 +11,10 @@ public final class R {
     public static final class array {
         public static final int actions_color=0x7f040002;
         public static final int actions_icons=0x7f040000;
-        /**          <item>@string/adefinir</item> 
-         <item>@string/adefinir</item> 
-         <item>@string/adefinir</item> 
-         <item>@string/adefinir</item> 
+        /**  <item>@string/adefinir</item> 
+ <item>@string/adefinir</item> 
+ <item>@string/adefinir</item> 
+ <item>@string/adefinir</item> 
          */
         public static final int actions_names=0x7f040001;
     }
@@ -105,14 +105,15 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f070001;
-        public static final int adefinir=0x7f07001a;
+        public static final int adefinir=0x7f07001b;
         public static final int app_name=0x7f070000;
-        public static final int apresmidi=0x7f070011;
-        public static final int apresmidi_time=0x7f070014;
-        public static final int couverture_name=0x7f070005;
-        public static final int demain=0x7f07001c;
-        public static final int drawer_close=0x7f070017;
-        public static final int drawer_open=0x7f070016;
+        public static final int apresmidi=0x7f070012;
+        public static final int apresmidi_time=0x7f070015;
+        public static final int couverture_name_defilant=0x7f070005;
+        public static final int couverture_name_geo=0x7f070006;
+        public static final int demain=0x7f07001d;
+        public static final int drawer_close=0x7f070018;
+        public static final int drawer_open=0x7f070017;
         /**  Pour le menu de gauche 
          */
         public static final int ensoleille_name=0x7f070004;
@@ -120,24 +121,24 @@ public final class R {
         public static final int hello_world=0x7f070002;
         /**  For hour selector 
          */
-        public static final int matinee=0x7f070010;
-        public static final int matinee_time=0x7f070013;
-        public static final int neige_name=0x7f07000a;
-        public static final int nondispo_layer=0x7f07001d;
-        public static final int orage_name=0x7f070006;
-        public static final int precipitation_name=0x7f070007;
-        public static final int rsiquepluise_name=0x7f070008;
-        public static final int soir=0x7f070012;
-        public static final int soir_time=0x7f070015;
-        public static final int temperature_name=0x7f07000b;
-        public static final int today=0x7f07001b;
-        public static final int token_error=0x7f07000f;
-        public static final int token_loading=0x7f070018;
-        public static final int type_view=0x7f07000c;
-        public static final int type_view_satellite=0x7f07000d;
-        public static final int type_view_traffic=0x7f07000e;
-        public static final int vent_name=0x7f070009;
-        public static final int your_position=0x7f070019;
+        public static final int matinee=0x7f070011;
+        public static final int matinee_time=0x7f070014;
+        public static final int neige_name=0x7f07000b;
+        public static final int nondispo_layer=0x7f07001e;
+        public static final int orage_name=0x7f070007;
+        public static final int precipitation_name=0x7f070008;
+        public static final int rsiquepluise_name=0x7f070009;
+        public static final int soir=0x7f070013;
+        public static final int soir_time=0x7f070016;
+        public static final int temperature_name=0x7f07000c;
+        public static final int today=0x7f07001c;
+        public static final int token_error=0x7f070010;
+        public static final int token_loading=0x7f070019;
+        public static final int type_view=0x7f07000d;
+        public static final int type_view_satellite=0x7f07000e;
+        public static final int type_view_traffic=0x7f07000f;
+        public static final int vent_name=0x7f07000a;
+        public static final int your_position=0x7f07001a;
     }
     public static final class style {
         /** 

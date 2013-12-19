@@ -26,14 +26,13 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 		final WMSLayer globeLyer3D = new WMSLayer("physicalmap", new URL(
 				"http://synchrone.meteo.fr/public/api/ogc/wms/raster_basemap/?token="
-						+ tokenToUse + "&", false),
-				WMSServerVersion.WMS_1_1_0, Sector.fullSphere(), "image/png",
-				"EPSG:4326", "", false, new LevelTileCondition(0, 18),
-				TimeInterval.fromDays(30), true);
+						+ tokenToUse + "&", false), WMSServerVersion.WMS_1_1_0,
+				Sector.fullSphere(), "image/png", "EPSG:4326", "", false,
+				new LevelTileCondition(0, 18), TimeInterval.fromDays(30), true);
 		globeLyer3D.setTitle("globe3D");
 		globeLyer3D.setEnable(true);
 		layerSet.addLayer(globeLyer3D);
-		
+
 		final WMSLayer globeLyer2D = new WMSLayer("openstreetmap", new URL(
 				"http://maps.opengeo.org/geowebcache/service/wms?", false),
 				WMSServerVersion.WMS_1_1_0, Sector.fullSphere(), "image/png",
@@ -44,135 +43,218 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 		layerSet.addLayer(globeLyer2D);
 
 		for (int i = 0; i < 7; i++) {
+			final WMSLayer cloudsLayerDefilant = new WMSLayer(
+					"geostationary_ir_mtl",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_mosaique_cinq-sats&token="
+									+ tokenToUse + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
+					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+							0, 18), TimeInterval.fromDays(30), true);
+			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_defilant)
+					+ "_" + i + "_" + matinIndicator);
+			cloudsLayerDefilant.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerDefilant);
+
+			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
+					"geostationary_hrv_cloud",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(0, matinIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
+			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_geo)
+					+ "_" + i + "_" + matinIndicator);
+			cloudsLayerGeostatitionnaire.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerGeostatitionnaire);
 
 			// définition des Layer set du matin
-			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, matinIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer tmpLyer = new WMSLayer(
+					"T__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, matinIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326",
+					"T__HEIGHT__NO_SHADING", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
 					+ "_" + i + "_" + matinIndicator);
 			tmpLyer.setEnable(false);
 
 			layerSet.addLayer(tmpLyer);
-			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, matinIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer ventLayer = new WMSLayer(
+					"UV__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, matinIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name)
-					+ "_" + i+ "_" + matinIndicator);
+					+ "_" + i + "_" + matinIndicator);
 			ventLayer.setEnable(false);
 
 			layerSet.addLayer(ventLayer);
-			final WMSLayer cloudsLayer = new WMSLayer(
-					"geostationary_hrv_cloud", new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
-									+ tokenToUse + "&", false),
-					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
-			cloudsLayer.setTitle(ctx.getResources().getString(
-					R.string.couverture_name)
-					+ "_" + i + "_" + matinIndicator);
-			cloudsLayer.setEnable(false);
-
-			layerSet.addLayer(cloudsLayer);
 
 		}
 
 		for (int i = 0; i < 7; i++) {
+			final WMSLayer cloudsLayerDefilant = new WMSLayer(
+					"geostationary_ir_mtl",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_mosaique_cinq-sats&token="
+									+ tokenToUse + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
+					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+							0, 18), TimeInterval.fromDays(30), true);
+			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_defilant)
+					+ "_" + i + "_" + amIndicator);
+			cloudsLayerDefilant.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerDefilant);
+
+			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
+					"geostationary_hrv_cloud",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(0, matinIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
+			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_geo)
+					+ "_" + i + "_" + amIndicator);
+			cloudsLayerGeostatitionnaire.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerGeostatitionnaire);
 
 			// définition des Layer set de AM
-			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, amIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer tmpLyer = new WMSLayer(
+					"T__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, amIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326",
+					"T__HEIGHT__NO_SHADING", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
 					+ "_" + i + "_" + amIndicator);
 			tmpLyer.setEnable(false);
 
 			layerSet.addLayer(tmpLyer);
-			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, amIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer ventLayer = new WMSLayer(
+					"UV__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, amIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name)
-					+ "_" + i+ "_" + amIndicator);
+					+ "_" + i + "_" + amIndicator);
 			ventLayer.setEnable(false);
 
 			layerSet.addLayer(ventLayer);
-			final WMSLayer cloudsLayer = new WMSLayer(
-					"geostationary_hrv_cloud", new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
-									+ tokenToUse + "&", false),
-					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
-			cloudsLayer.setTitle(ctx.getResources().getString(
-					R.string.couverture_name)
-					+ "_" + i + "_" + amIndicator);
-			cloudsLayer.setEnable(false);
-
-			layerSet.addLayer(cloudsLayer);
 
 		}
-		
-		
+
 		for (int i = 0; i < 7; i++) {
+			final WMSLayer cloudsLayerDefilant = new WMSLayer(
+					"geostationary_ir_mtl",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_mosaique_cinq-sats&token="
+									+ tokenToUse + "&", false),
+					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
+					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
+							0, 18), TimeInterval.fromDays(30), true);
+			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_defilant)
+					+ "_" + i + "_" + soirIndicator);
+			cloudsLayerDefilant.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerDefilant);
+
+			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
+					"geostationary_hrv_cloud",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(0, matinIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
+			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+					R.string.couverture_name_geo)
+					+ "_" + i + "_" + soirIndicator);
+			cloudsLayerGeostatitionnaire.setEnable(false);
+
+			layerSet.addLayer(cloudsLayerGeostatitionnaire);
 
 			// définition des Layer set du soir
-			final WMSLayer tmpLyer = new WMSLayer("T__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, soirIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "T__HEIGHT__NO_SHADING", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer tmpLyer = new WMSLayer(
+					"T__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, soirIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326",
+					"T__HEIGHT__NO_SHADING", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			tmpLyer.setTitle(ctx.getResources().getString(
 					R.string.temperature_name)
 					+ "_" + i + "_" + soirIndicator);
 			tmpLyer.setEnable(false);
 
 			layerSet.addLayer(tmpLyer);
-			final WMSLayer ventLayer = new WMSLayer("UV__HEIGHT", new URL(
-					"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
-							+ tokenToUse + "&time="
-							+ formatDateToUniversel(i, soirIndicator) + "&",
-					false), WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+			final WMSLayer ventLayer = new WMSLayer(
+					"UV__HEIGHT",
+					new URL(
+							"http://synchrone.meteo.fr/public/api/ogc/wms/model/?dim_process=PA__0.5&token="
+									+ tokenToUse
+									+ "&time="
+									+ formatDateToUniversel(i, soirIndicator)
+									+ "&", false), WMSServerVersion.WMS_1_3_0,
+					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+					true);
 			ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name)
-					+ "_" + i+ "_" + soirIndicator);
+					+ "_" + i + "_" + soirIndicator);
 			ventLayer.setEnable(false);
 
 			layerSet.addLayer(ventLayer);
-			final WMSLayer cloudsLayer = new WMSLayer(
-					"geostationary_hrv_cloud", new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?token="
-									+ tokenToUse + "&", false),
-					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
-					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
-			cloudsLayer.setTitle(ctx.getResources().getString(
-					R.string.couverture_name)
-					+ "_" + i + "_" + soirIndicator);
-			cloudsLayer.setEnable(false);
-
-			layerSet.addLayer(cloudsLayer);
 
 		}
 		// final Geodetic2D lower = new Geodetic2D(Angle.fromDegrees(-90),

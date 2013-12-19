@@ -8,7 +8,8 @@
 
     <!-- Pour le menu de gauche -->
     <string name="ensoleille_name">Ensoleillé</string>
-    <string name="couverture_name">Couverture nuageuse</string>
+    <string name="couverture_name_defilant">Nuage défilant</string>
+       <string name="couverture_name_geo">Nuage géostationnaire</string>
     <string name="orage_name">Orages</string>
     <string name="precipitation_name">Précipitation</string>
     <string name="rsiquepluise_name">Risques de pluie</string>
