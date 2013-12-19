@@ -2,15 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/switchViewItem"
-        android:icon="@drawable/glob2d"
+        android:id="@+id/zoominzoomout"
+        android:icon="@android:drawable/ic_menu_zoom"
         android:orderInCategory="100"
         android:showAsAction="always"/>
-        <item
-        android:id="@+id/switchAddPosition"
-        android:icon="@android:drawable/ic_menu_compass"
+    <item
+        android:id="@+id/switchViewItem"
+        android:icon="@drawable/glob2d"
         android:orderInCategory="200"
         android:showAsAction="always"/>
-
+    <item
+        android:id="@+id/switchAddPosition"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:orderInCategory="300"
+        android:showAsAction="always"/>
 
 </menu>

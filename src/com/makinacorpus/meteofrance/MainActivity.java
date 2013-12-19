@@ -74,11 +74,12 @@ import com.makinacorpus.meteofrance.ui.TextTimeView;
 public class MainActivity extends RoboActivity implements ITextViewListener {
 	// Pour l'affichage de la position de l'utilisateur
 	ViewPager pagerDate, pagerHour;
+	private boolean mode3DActivated = true;
 	private static final String nomLayer3D = "globe3D";
 	private static final String nomLayer2D = "globe2D";
 	Menu menuToManage;
 	MarksRenderer userMarkers = new MarksRenderer(false);
-	private static final int limit2D = 7000000;
+	private static final int limit2D = 6500000;
 	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
 	private static final String token_url = "http://query.yahooapis.com/v1/public/yql?q=use%20%22http%3A%2F%2Fwww.plomino.net%2Fpost-yql%22%20as%20htmlpost%3B%0Aselect%20*%20from%20htmlpost%20where%0Aurl%3D'http%3A%2F%2Fsynchrone.meteo.fr%2Fpublic%2Fapi%2Fcustom%2Ftokens%2F'%0Aand%20postdata%3D%22%22%20and%20xpath%3D%22%2F%2Fp%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
@@ -92,7 +93,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
-	private static final int to2DDistance = 55000;
+	private static final int to2DDistance = 300000;
 	private static final int to3DDistance = 26000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
@@ -171,12 +172,12 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		mDrawerList.setAdapter(new ActionsAdapter(this));
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("");
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setBackgroundDrawable(
 				new ColorDrawable(getResources().getColor(
 						R.color.blacktransparent)));
 		// Enabling Up navigation
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 		activityContext = this;
 		chechOffDrawable.setBounds(0, 0, chechOffDrawable.getIntrinsicWidth(),
 				chechOffDrawable.getIntrinsicHeight());
@@ -254,30 +255,10 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				builder.addCameraConstraint(new ICameraConstrainer() {
 
-					@Override
-					public boolean onCameraChange(Planet planet,
-							Camera previousCamera, Camera nextCamera) {
-						// TODO Auto-generated method stub
-
-						Geodetic3D geo2D = nextCamera.getGeodeticPosition();
-						if (geo2D._height < limit2D) {
-							nextCamera.setHeading(Angle.zero());
-						}
-
-						return false;
-					}
-
-					@Override
-					public void dispose() {
-						// TODO Auto-generated method stub
-
-					}
-				});
 				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
-				activeUpdateIconWhenTouch();
+				// activeUpdateIconWhenTouch();
 
 				_placeHolder.addView(_g3mWidget);
 
@@ -314,7 +295,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				Geodetic3D geo2D = camera.getGeodeticPosition();
 
-				if (geo2D._height < limit2D) {
+				if (!mode3DActivated) {
 					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
 
@@ -362,7 +343,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				Camera camera = _g3mWidget.getNextCamera();
 
 				Geodetic3D geo2D = camera.getGeodeticPosition();
-				if (geo2D._height < limit2D) {
+				if (!mode3DActivated) {
 					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
 
@@ -455,11 +436,27 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						Camera previousCamera, Camera nextCamera) {
 					// TODO Auto-generated method stub
 
-					Geodetic3D geo2D = nextCamera.getGeodeticPosition();
-					if (geo2D._height < limit2D) {
+					// Geodetic3D geo2D = nextCamera.getGeodeticPosition();
+					//
+					// if (mode3DActivated) {
+					// if (geo2D._height < limit2D)
+					// // nextCamera=previousCamera;
+					//
+					// {
+					//
+					// nextCamera.setGeodeticPosition(geo2D._latitude,
+					//
+					// geo2D._longitude, limit2D);
+					//
+					// }
+					//
+					// }
+					if (!mode3DActivated) {
 						nextCamera.setHeading(Angle.zero());
+						// if (geo2D._height > limit2D)
+						// nextCamera.setGeodeticPosition(geo2D._latitude,
+						// geo2D._longitude, limit2D);
 					}
-
 					return false;
 				}
 
@@ -472,7 +469,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
 			_placeHolder.addView(_g3mWidget);
-			activeUpdateIconWhenTouch();
+			// activeUpdateIconWhenTouch();
 
 			if (progress.isShowing()) {
 				progress.dismiss();
@@ -503,17 +500,23 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+		if (userLocation != null) {
+
+			latitudeA = Angle.fromDegrees(userLocation.getLatitude());
+			longitudeA = Angle.fromDegrees(userLocation.getLongitude());
+
+		} else {
+			latitudeA = Angle.fromDegrees(latitudeToulouse);
+			longitudeA = Angle.fromDegrees(longitudeToulouse);
+
+		}
+
 		switch (item.getItemId()) {
-		case R.id.switchViewItem:
-			if (userLocation != null) {
 
-				latitudeA = Angle.fromDegrees(userLocation.getLatitude());
-				longitudeA = Angle.fromDegrees(userLocation.getLongitude());
+		case R.id.zoominzoomout: {
 
-			} else {
-				latitudeA = Angle.fromDegrees(latitudeToulouse);
-				longitudeA = Angle.fromDegrees(longitudeToulouse);
-
+			if (mDrawerToggle.onOptionsItemSelected(item)) {
+				return true;
 			}
 			Camera cameraaa = _g3mWidget.getNextCamera();
 			Geodetic3D geo2D = cameraaa.getGeodeticPosition();
@@ -522,25 +525,98 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to2DDistance));
-				layerset.getLayerByTitle(nomLayer3D).setEnable(false);
-				layerset.getLayerByTitle(nomLayer2D).setEnable(true);
-				item.setIcon(glob3Ddrawable);
 
 			} else {
-				// final Layer layerToAdd = layerset
-				// .getLayerByTitle(layerPrecepitationName);
-				// layerToAdd.setEnable(false);
-				//
-				// removeIconFromMap(layerPrecepitationName);
-				layerset.getLayerByTitle(nomLayer3D).setEnable(true);
-				layerset.getLayerByTitle(nomLayer2D).setEnable(false);
+
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
 						longitudeA, to3DDistance));
+
+			}
+		}
+
+			break;
+
+		case R.id.switchViewItem: {
+			if (mDrawerToggle.onOptionsItemSelected(item)) {
+				return true;
+			}
+
+			// Camera cameraaa = _g3mWidget.getNextCamera();
+			// Geodetic3D geo2D = cameraaa.getGeodeticPosition();
+
+			if (mode3DActivated) {
+
+				mode3DActivated = false;
+
+				builder = new G3MBuilder_Android(activityContext);
+				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
+				builder.setPlanet(Planet.createFlatEarth());
+
+				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				builder.getPlanetRendererBuilder().setShowStatistics(true);
+				builder.addCameraConstraint(new ICameraConstrainer() {
+
+					@Override
+					public boolean onCameraChange(Planet planet,
+							Camera previousCamera, Camera nextCamera) {
+						// TODO Auto-generated method stub
+
+						nextCamera.setHeading(Angle.zero());
+
+						if (nextCamera.getGeodeticCenterOfView().isNan()) {
+							nextCamera.setGeodeticPosition(new Geodetic2D(
+									latitudeA, longitudeA), nextCamera
+									.getGeodeticPosition()._height);
+
+						}
+
+						return false;
+					}
+
+					@Override
+					public void dispose() {
+						// TODO Auto-generated method stub
+
+					}
+				});
+				addMarkerPosition();
+				_g3mWidget = builder.createWidget();
+
+				// activeUpdateIconWhenTouch();
+				_placeHolder.removeAllViews();
+				_placeHolder.addView(_g3mWidget);
+
+				item.setIcon(glob3Ddrawable);
+				layerset.getLayerByTitle(nomLayer3D).setEnable(false);
+				layerset.getLayerByTitle(nomLayer2D).setEnable(true);
+
+			} else {
+				mode3DActivated = true;
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to3DDistance));
+
+				builder = new G3MBuilder_Android(activityContext);
+				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
+				builder.setPlanet(Planet.createSphericalEarth());
+				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+
+				addMarkerPosition();
+
+				_g3mWidget = builder.createWidget();
+				// activeUpdateIconWhenTouch();
+				_placeHolder.removeAllViews();
+				_placeHolder.addView(_g3mWidget);
+
+				layerset.getLayerByTitle(nomLayer3D).setEnable(true);
+				layerset.getLayerByTitle(nomLayer2D).setEnable(false);
+
 				item.setIcon(glob2Ddrawable);
 
 			}
+		}
 			break;
-		case R.id.switchAddPosition:
+		case R.id.switchAddPosition: {
+
 			if (!isMarkerPositionActivated) {
 
 				isMarkerPositionActivated = true;
@@ -551,10 +627,12 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				userMarkers.setEnable(false);
 
 			}
+		}
 			break;
 		default:
 			break;
 		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -621,41 +699,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				counter++;
 
 		}
-	}
-
-	private void activeUpdateIconWhenTouch() {
-		// Pour gérer l'icone de l'actionBAr en fonction de zoom de
-		// l'utilisateur
-		_g3mWidget.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				// TODO Auto-generated method stub
-
-				Camera camera = _g3mWidget.getNextCamera();
-
-				Geodetic3D geo2D = camera.getGeodeticPosition();
-
-				if (geo2D._height < limit2D) {
-					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
-					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
-
-					menuToManage.findItem(R.id.switchViewItem).setIcon(
-							glob3Ddrawable);
-
-				} else {
-
-					menuToManage.findItem(R.id.switchViewItem).setIcon(
-							glob2Ddrawable);
-					layerset.getLayerByTitle(nomLayer2D).setEnable(false);
-					layerset.getLayerByTitle(nomLayer3D).setEnable(true);
-
-				}
-				return false;
-			}
-		});
-
 	}
 
 }

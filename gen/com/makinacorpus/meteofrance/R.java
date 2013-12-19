@@ -83,8 +83,8 @@ public final class R {
         public static final int layoutContainerImage=0x7f0a0007;
         public static final int pager_container_Time=0x7f0a0006;
         public static final int pager_container_day=0x7f0a0005;
-        public static final int switchAddPosition=0x7f0a000f;
-        public static final int switchViewItem=0x7f0a000e;
+        public static final int switchAddPosition=0x7f0a0010;
+        public static final int switchViewItem=0x7f0a000f;
         public static final int textLayer=0x7f0a0000;
         public static final int text_day=0x7f0a0009;
         public static final int text_time_summary=0x7f0a000d;
@@ -92,6 +92,7 @@ public final class R {
         public static final int timeSelector=0x7f0a0004;
         public static final int viewNotSlectedMarker=0x7f0a000b;
         public static final int viewSlectedMarker=0x7f0a000a;
+        public static final int zoominzoomout=0x7f0a000e;
     }
     public static final class layout {
         public static final int action_list_item=0x7f030000;
