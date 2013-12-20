@@ -15,8 +15,9 @@
     <string-array name="actions_names">
         <item>@string/temperature_name</item>
         <item>@string/vent_name</item>
-        <item>@string/couverture_name_defilant</item>
         <item>@string/couverture_name_geo</item>
+        <item>@string/couverture_name_defilant</item>
+     
         <!-- <item>@string/adefinir</item> -->
         <!-- <item>@string/adefinir</item> -->
         <!-- <item>@string/adefinir</item> -->

@@ -78,7 +78,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private static final String nomLayer3D = "globe3D";
 	private static final String nomLayer2D = "globe2D";
 	Menu menuToManage;
-	MarksRenderer userMarkers = new MarksRenderer(false);
+	MarksRenderer userMarkers ;
 	private static final int limit2D = 6500000;
 	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
@@ -147,7 +147,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, R.string.drawer_open,
 				R.string.drawer_close) {
@@ -291,10 +290,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			public void onPageSelected(int position) {
 				layerset.disableAllLayers();
-				Camera camera = _g3mWidget.getNextCamera();
-
-				Geodetic3D geo2D = camera.getGeodeticPosition();
-
+				
 				if (!mode3DActivated) {
 					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
@@ -340,9 +336,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			public void onPageSelected(int position) {
 				layerset.disableAllLayers();
-				Camera camera = _g3mWidget.getNextCamera();
-
-				Geodetic3D geo2D = camera.getGeodeticPosition();
+			
 				if (!mode3DActivated) {
 					layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 					layerset.getLayerByTitle(nomLayer2D).setEnable(true);
@@ -434,23 +428,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				@Override
 				public boolean onCameraChange(Planet planet,
 						Camera previousCamera, Camera nextCamera) {
-					// TODO Auto-generated method stub
-
-					// Geodetic3D geo2D = nextCamera.getGeodeticPosition();
-					//
-					// if (mode3DActivated) {
-					// if (geo2D._height < limit2D)
-					// // nextCamera=previousCamera;
-					//
-					// {
-					//
-					// nextCamera.setGeodeticPosition(geo2D._latitude,
-					//
-					// geo2D._longitude, limit2D);
-					//
-					// }
-					//
-					// }
+				
 					if (!mode3DActivated) {
 						nextCamera.setHeading(Angle.zero());
 						// if (geo2D._height > limit2D)
@@ -549,11 +527,12 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				mode3DActivated = false;
 
 				builder = new G3MBuilder_Android(activityContext);
+				
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 				builder.setPlanet(Planet.createFlatEarth());
-
+			
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				builder.getPlanetRendererBuilder().setShowStatistics(true);
+			
 				builder.addCameraConstraint(new ICameraConstrainer() {
 
 					@Override
@@ -592,16 +571,33 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 			} else {
 				mode3DActivated = true;
-				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
-						longitudeA, to3DDistance));
+			
 
 				builder = new G3MBuilder_Android(activityContext);
+
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 				builder.setPlanet(Planet.createSphericalEarth());
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+				builder.addCameraConstraint(new ICameraConstrainer() {
+
+					@Override
+					public boolean onCameraChange(Planet planet,
+							Camera previousCamera, Camera nextCamera) {
+						// TODO Auto-generated method stub
+
+					
+
+						return false;
+					}
+
+					@Override
+					public void dispose() {
+						// TODO Auto-generated method stub
+
+					}
+				});
 
 				addMarkerPosition();
-
 				_g3mWidget = builder.createWidget();
 				// activeUpdateIconWhenTouch();
 				_placeHolder.removeAllViews();
@@ -652,6 +648,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	}
 
 	private void addMarkerPosition() {
+		userMarkers= new MarksRenderer(false);
 		Geodetic2D position = null;
 		if (userLocation != null) {
 

@@ -52,7 +52,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_defilant)
+					R.string.couverture_name_geo)
 					+ "_" + i + "_" + matinIndicator);
 			cloudsLayerDefilant.setEnable(false);
 
@@ -70,7 +70,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
 					true);
 			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_geo)
+					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + matinIndicator);
 			cloudsLayerGeostatitionnaire.setEnable(false);
 
@@ -124,7 +124,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_defilant)
+					R.string.couverture_name_geo)
 					+ "_" + i + "_" + amIndicator);
 			cloudsLayerDefilant.setEnable(false);
 
@@ -142,7 +142,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
 					true);
 			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_geo)
+					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + amIndicator);
 			cloudsLayerGeostatitionnaire.setEnable(false);
 
@@ -196,7 +196,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
 							0, 18), TimeInterval.fromDays(30), true);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_defilant)
+					R.string.couverture_name_geo)
 					+ "_" + i + "_" + soirIndicator);
 			cloudsLayerDefilant.setEnable(false);
 
@@ -214,7 +214,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
 					true);
 			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
-					R.string.couverture_name_geo)
+					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + soirIndicator);
 			cloudsLayerGeostatitionnaire.setEnable(false);
 
