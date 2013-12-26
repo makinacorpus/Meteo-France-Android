@@ -58,23 +58,34 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(cloudsLayerDefilant);
 
-			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
-					"geostationary_hrv_cloud",
-					new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
-									+ tokenToUse
-									+ "&time="
-									+ formatDateToUniversel(0, matinIndicator)
-									+ "&", false), WMSServerVersion.WMS_1_3_0,
-					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
-					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
-					true);
-			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+//			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
+//					"geostationary_hrv_cloud",
+//					new URL(
+//							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+//									+ tokenToUse
+//									+ "&time="
+//									+ formatDateToUniversel(0, matinIndicator)
+//									+ "&", false), WMSServerVersion.WMS_1_3_0,
+//					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
+//					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
+//					true);
+			
+			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
+					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+							+ tokenToUse
+							+ "&time="
+							+ formatDateToUniversel(0, matinIndicator)
+							+ "&", false), 
+							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
+							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+							TimeInterval.fromDays(30), true, null, 0.5f);
+		
+			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + matinIndicator);
-			cloudsLayerGeostatitionnaire.setEnable(false);
+			cloudsLayerWithTransparence.setEnable(false);
 
-			layerSet.addLayer(cloudsLayerGeostatitionnaire);
+			layerSet.addLayer(cloudsLayerWithTransparence);
 
 			// définition des Layer set du matin
 			final WMSLayer tmpLyer = new WMSLayer(
@@ -130,23 +141,22 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(cloudsLayerDefilant);
 
-			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
-					"geostationary_hrv_cloud",
-					new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
-									+ tokenToUse
-									+ "&time="
-									+ formatDateToUniversel(0, matinIndicator)
-									+ "&", false), WMSServerVersion.WMS_1_3_0,
-					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
-					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
-					true);
-			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
+					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+							+ tokenToUse
+							+ "&time="
+							+ formatDateToUniversel(0, amIndicator)
+							+ "&", false), 
+							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
+							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+							TimeInterval.fromDays(30), true, null, 0.5f);
+		
+			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + amIndicator);
-			cloudsLayerGeostatitionnaire.setEnable(false);
+			cloudsLayerWithTransparence.setEnable(false);
 
-			layerSet.addLayer(cloudsLayerGeostatitionnaire);
+			layerSet.addLayer(cloudsLayerWithTransparence);
 
 			// définition des Layer set de AM
 			final WMSLayer tmpLyer = new WMSLayer(
@@ -202,23 +212,22 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 
 			layerSet.addLayer(cloudsLayerDefilant);
 
-			final WMSLayer cloudsLayerGeostatitionnaire = new WMSLayer(
-					"geostationary_hrv_cloud",
-					new URL(
-							"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
-									+ tokenToUse
-									+ "&time="
-									+ formatDateToUniversel(0, matinIndicator)
-									+ "&", false), WMSServerVersion.WMS_1_3_0,
-					Sector.fullSphere(), "image/png", "EPSG:4326", "", true,
-					new LevelTileCondition(0, 18), TimeInterval.fromDays(30),
-					true);
-			cloudsLayerGeostatitionnaire.setTitle(ctx.getResources().getString(
+			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
+					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
+							+ tokenToUse
+							+ "&time="
+							+ formatDateToUniversel(0, soirIndicator)
+							+ "&", false), 
+							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
+							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
+							TimeInterval.fromDays(30), true, null, 0.5f);
+		
+			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
 					+ "_" + i + "_" + soirIndicator);
-			cloudsLayerGeostatitionnaire.setEnable(false);
+			cloudsLayerWithTransparence.setEnable(false);
 
-			layerSet.addLayer(cloudsLayerGeostatitionnaire);
+			layerSet.addLayer(cloudsLayerWithTransparence);
 
 			// définition des Layer set du soir
 			final WMSLayer tmpLyer = new WMSLayer(
