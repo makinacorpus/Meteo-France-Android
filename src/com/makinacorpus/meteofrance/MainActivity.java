@@ -97,6 +97,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private static final int to3DDistance = 22000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
+	private static final double maxZoomIn2D=1.7E7;
 
 	private Context activityContext;
 	@InjectView(R.id.layoutContainerImage)
@@ -551,8 +552,11 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 									.getGeodeticPosition()._height);
 
 						}
-Log.i("kkkkkkkkkkkkkkkkkkkkkkkkkk",nextCamera
-									.getGeodeticPosition()._height+"");
+						if(nextCamera.getGeodeticPosition()._height>maxZoomIn2D){
+							nextCamera.setGeodeticPosition(new Geodetic2D(
+									Angle.zero(), Angle.zero()),maxZoomIn2D);
+						}
+
 						return false;
 					}
 
