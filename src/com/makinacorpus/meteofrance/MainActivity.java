@@ -130,6 +130,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	Drawable chechOffDrawable;
 	@InjectResource(R.drawable.check_on)
 	Drawable chechOnDrawable;
+	@InjectResource(R.string.vent_name) String ventName;
 
 	Angle latitudeA;
 	Angle longitudeA;
@@ -167,6 +168,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 		};
 		listLayerActivated = new ArrayList<String>();
+		listLayerActivated.add(ventName);
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 		mDrawerList.setAdapter(new ActionsAdapter(this));
 		getActionBar().setHomeButtonEnabled(true);
@@ -228,7 +230,6 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 									drawablesCoumpounds[0], null,
 									chechOffDrawable, null);
 							layerToAdd.setEnable(false);
-
 							removeIconFromMap((String) view.getTag());
 						}
 					}

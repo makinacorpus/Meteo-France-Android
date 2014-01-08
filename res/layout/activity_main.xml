@@ -51,8 +51,6 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal" />
             </com.makinacorpus.meteofrance.ui.PagerContainer>
-
-          
         </LinearLayout>
 
         <LinearLayout
@@ -64,6 +62,13 @@
             android:background="@color/blacktransparent"
             android:gravity="bottom"
             android:orientation="vertical" >
+          
+
+            <ImageView
+                android:layout_width="40dp"
+                android:background="@drawable/vents"
+                android:tag="@string/vent_name"
+                android:layout_height="40dp" />
         </LinearLayout>
     </RelativeLayout>
     <!-- The navigation drawer -->

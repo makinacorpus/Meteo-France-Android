@@ -78,7 +78,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.5f);
+							TimeInterval.fromDays(30), true, null, 0.3f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
@@ -119,7 +119,9 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 					true);
 			ventLayer.setTitle(ctx.getResources().getString(R.string.vent_name)
 					+ "_" + i + "_" + matinIndicator);
-			ventLayer.setEnable(false);
+			if(i==0)
+			ventLayer.setEnable(true);
+			else 	ventLayer.setEnable(false);
 
 			layerSet.addLayer(ventLayer);
 
@@ -149,7 +151,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.5f);
+							TimeInterval.fromDays(30), true, null, 0.3f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
@@ -220,7 +222,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.5f);
+							TimeInterval.fromDays(30), true, null, 0.3f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)

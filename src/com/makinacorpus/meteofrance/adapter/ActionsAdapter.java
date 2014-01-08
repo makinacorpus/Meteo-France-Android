@@ -93,11 +93,17 @@ public class ActionsAdapter extends BaseAdapter {
 					.getDrawable(mIcons[position]);
 			final Drawable iconOff = convertView.getContext().getResources()
 					.getDrawable(R.drawable.check_off);
+			final Drawable iconOnn = convertView.getContext().getResources()
+					.getDrawable(R.drawable.check_on);
 			icon.setBounds(0, 0, icon.getIntrinsicWidth(),
 					icon.getIntrinsicHeight());
 			iconOff.setBounds(0, 0, iconOff.getIntrinsicWidth(),
 					iconOff.getIntrinsicHeight());
-			text.setCompoundDrawables(icon, null, iconOff, null);
+			iconOnn.setBounds(0, 0, iconOnn.getIntrinsicWidth(),
+					iconOnn.getIntrinsicHeight());
+			if(mTitles[position].equals(convertView.getContext().getResources().getString(R.string.vent_name)))
+			text.setCompoundDrawables(icon, null, iconOnn, null);
+			else 	text.setCompoundDrawables(icon, null, iconOff, null);
 			text.setText(mTitles[position]);
 
 			convertView.setBackgroundDrawable(new ColorDrawable(convertView
