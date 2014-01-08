@@ -50,7 +50,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+							0, 18), TimeInterval.fromDays(30), true, null, 0.5f);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_geo)
 					+ "_" + i + "_" + matinIndicator);
@@ -78,7 +78,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.3f);
+							TimeInterval.fromDays(30), true, null, 0.5f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
@@ -135,7 +135,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+							0, 18), TimeInterval.fromDays(30), true ,null, 0.5f);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_geo)
 					+ "_" + i + "_" + amIndicator);
@@ -151,7 +151,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.3f);
+							TimeInterval.fromDays(30), true, null, 0.5f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)
@@ -206,7 +206,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 									+ tokenToUse + "&", false),
 					WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),
 					"image/png", "EPSG:4326", "", true, new LevelTileCondition(
-							0, 18), TimeInterval.fromDays(30), true);
+							0, 18), TimeInterval.fromDays(30), true, null, 0.5f);
 			cloudsLayerDefilant.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_geo)
 					+ "_" + i + "_" + soirIndicator);
@@ -222,7 +222,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
-							TimeInterval.fromDays(30), true, null, 0.3f);
+							TimeInterval.fromDays(30), true, null, 0.5f);
 		
 			cloudsLayerWithTransparence.setTitle(ctx.getResources().getString(
 					R.string.couverture_name_defilant)

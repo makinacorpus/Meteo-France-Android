@@ -94,7 +94,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private boolean isMarkerPositionActivated = false;
 	static String tokenToUse = "";
 	private static final int to2DDistance = 300000;
-	private static final int to3DDistance = 26000000;
+	private static final int to3DDistance = 22000000;
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
 
@@ -199,6 +199,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 							.getLayerByTitle((String) view.getTag() + "_"
 									+ positionRollerDate + "_"
 									+ positionRollerHour);
+		
+					
 
 					if (layerToAdd != null) {
 						TextView txtContainer = (TextView) view
@@ -549,7 +551,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 									.getGeodeticPosition()._height);
 
 						}
-
+Log.i("kkkkkkkkkkkkkkkkkkkkkkkkkk",nextCamera
+									.getGeodeticPosition()._height+"");
 						return false;
 					}
 
@@ -569,6 +572,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				item.setIcon(glob3Ddrawable);
 				layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 				layerset.getLayerByTitle(nomLayer2D).setEnable(true);
+				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
+						longitudeA, to2DDistance));
 
 			} else {
 				mode3DActivated = true;
