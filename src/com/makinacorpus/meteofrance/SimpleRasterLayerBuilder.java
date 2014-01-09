@@ -73,8 +73,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
 					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
 							+ tokenToUse
-							+ "&time="
-							+ formatDateToUniversel(0, matinIndicator)
+						
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
@@ -146,8 +145,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
 					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
 							+ tokenToUse
-							+ "&time="
-							+ formatDateToUniversel(0, amIndicator)
+							
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
@@ -217,8 +215,7 @@ public class SimpleRasterLayerBuilder extends LayerBuilder {
 			final WMSLayer cloudsLayerWithTransparence= new WMSLayer("geostationary_hrv_cloud", new URL(
 					"http://synchrone.meteo.fr/public/api/ogc/wms/satellite/?dim_process=geostationary_msg3-met10&token="
 							+ tokenToUse
-							+ "&time="
-							+ formatDateToUniversel(0, soirIndicator)
+						
 							+ "&", false), 
 							WMSServerVersion.WMS_1_3_0, Sector.fullSphere(),  "image/png", 
 							"EPSG:4326", "", true, new LevelTileCondition(0, 18),
