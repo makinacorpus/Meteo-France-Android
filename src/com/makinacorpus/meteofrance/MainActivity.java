@@ -76,7 +76,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private static final String nomLayer3D = "globe3D";
 	private static final String nomLayer2D = "globe2D";
 	Menu menuToManage;
-	MarksRenderer userMarkers;
+	MarksRenderer userMarkers3D;
+	MarksRenderer userMarkers2D;
 	private static final int limit2D = 6500000;
 	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
@@ -96,6 +97,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private static final double latitudeToulouse = 43.605256;
 	private static final double longitudeToulouse = 1.444988;
 	private static final double maxZoomIn2D = 1.7E7;
+	private static final double maxZoomIn2DNivau2 = 2.2E7;
 
 	private Context activityContext;
 	@InjectView(R.id.layoutContainerImage)
@@ -441,7 +443,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				@Override
 				public void dispose() {
-					// TODO Auto-generated method stub
+					// 
+
+					
 
 				}
 			});
@@ -575,7 +579,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				layerset.getLayerByTitle(nomLayer3D).setEnable(false);
 				layerset.getLayerByTitle(nomLayer2D).setEnable(true);
 				_g3mWidget.setAnimatedCameraPosition(new Geodetic3D(latitudeA,
-						longitudeA, to2DDistance));
+						longitudeA, maxZoomIn2DNivau2));
 
 			} else {
 				mode3DActivated = true;
@@ -585,23 +589,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				builder.setBackgroundColor(Color.fromRGBA255(0, 0, 0, 0));
 				builder.setPlanet(Planet.createSphericalEarth());
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
-				builder.addCameraConstraint(new ICameraConstrainer() {
-
-					@Override
-					public boolean onCameraChange(Planet planet,
-							Camera previousCamera, Camera nextCamera) {
-						// TODO Auto-generated method stub
-
-						return false;
-					}
-
-					@Override
-					public void dispose() {
-						// TODO Auto-generated method stub
-
-					}
-				});
-
+			
 				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
 				// activeUpdateIconWhenTouch();
@@ -621,11 +609,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			if (!isMarkerPositionActivated) {
 
 				isMarkerPositionActivated = true;
-				userMarkers.setEnable(true);
+				if(mode3DActivated)
+				userMarkers3D.setEnable(true);
+				else 	userMarkers2D.setEnable(true);
 
 			} else {
 				isMarkerPositionActivated = false;
-				userMarkers.setEnable(false);
+				if(mode3DActivated)
+					userMarkers3D.setEnable(false);
+					else 	userMarkers2D.setEnable(false);
 
 			}
 		}
@@ -653,7 +645,8 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	}
 
 	private void addMarkerPosition() {
-		userMarkers = new MarksRenderer(false);
+		userMarkers2D = new MarksRenderer(true);
+		userMarkers3D = new MarksRenderer(true);
 		Geodetic2D position = null;
 		if (userLocation != null) {
 
@@ -668,14 +661,22 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 					.show();
 
 		}
-		userMarkers.addMark(new Mark(yourPoisiton, //
+		userMarkers2D.addMark(new Mark(yourPoisiton, //
 				new URL(markerUrl, false), //
 				new Geodetic3D(position, 0), //
 				AltitudeMode.RELATIVE_TO_GROUND, 0, //
 				true, //
 				14));
-		builder.addRenderer(userMarkers);
-		userMarkers.setEnable(false);
+		builder.addRenderer(userMarkers2D);
+		userMarkers2D.setEnable(false);
+		userMarkers3D.addMark(new Mark(yourPoisiton, //
+				new URL(markerUrl, false), //
+				new Geodetic3D(position, 0), //
+				AltitudeMode.RELATIVE_TO_GROUND, 0, //
+				true, //
+				14));
+		builder.addRenderer(userMarkers3D);
+		userMarkers3D.setEnable(false);
 
 	}
 
