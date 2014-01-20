@@ -15,6 +15,8 @@ import org.glob3.mobile.generated.AltitudeMode;
 import org.glob3.mobile.generated.Angle;
 import org.glob3.mobile.generated.Camera;
 import org.glob3.mobile.generated.Color;
+import org.glob3.mobile.generated.G3MContext;
+import org.glob3.mobile.generated.GTask;
 import org.glob3.mobile.generated.Geodetic2D;
 import org.glob3.mobile.generated.Geodetic3D;
 import org.glob3.mobile.generated.ICameraConstrainer;
@@ -23,7 +25,9 @@ import org.glob3.mobile.generated.LayerSet;
 import org.glob3.mobile.generated.Mark;
 import org.glob3.mobile.generated.MarksRenderer;
 import org.glob3.mobile.generated.Planet;
+import org.glob3.mobile.generated.Sector;
 import org.glob3.mobile.generated.URL;
+import org.glob3.mobile.generated.Vector3D;
 import org.glob3.mobile.specific.G3MBuilder_Android;
 import org.glob3.mobile.specific.G3MWidget_Android;
 import org.json.JSONException;
@@ -76,8 +80,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	private static final String nomLayer3D = "globe3D";
 	private static final String nomLayer2D = "globe2D";
 	Menu menuToManage;
-	MarksRenderer userMarkers3D;
-	MarksRenderer userMarkers2D;
+	MarksRenderer userMarkers;
 	private static final int limit2D = 6500000;
 	ArrayList<String> listLayerActivated;
 	private static final String markerUrl = "https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/64/Map-Marker-Marker-Outside-Azure.png";
@@ -178,7 +181,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setBackgroundDrawable(
 				new ColorDrawable(getResources().getColor(
-						R.color.blacktransparent)));
+						R.color.text_blue)));
 		// Enabling Up navigation
 
 		activityContext = this;
@@ -449,6 +452,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 				}
 			});
+			
 			addMarkerPosition();
 			_g3mWidget = builder.createWidget();
 			_placeHolder.addView(_g3mWidget);
@@ -457,6 +461,9 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			if (progress.isShowing()) {
 				progress.dismiss();
 			}
+			
+			
+			
 		}
 	}
 
@@ -537,6 +544,15 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				builder.setPlanet(Planet.createFlatEarth());
 
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
+//				 final Geodetic2D lower = new Geodetic2D( //
+//				           Angle.fromDegrees(38.1569225644), //
+//				           Angle.fromDegrees(-9.5500388913));
+//				  final Geodetic2D upper = new Geodetic2D( //
+//				           Angle.fromDegrees(38.9859010475), //
+//				           Angle.fromDegrees(-8.5790345107));
+//				  final Sector demSector = new Sector(lower, upper);
+				  builder.setShownSector(Sector.fullSphere().shrinkedByPercent(0.1f));
+				
 
 				builder.addCameraConstraint(new ICameraConstrainer() {
 
@@ -546,21 +562,19 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 						// TODO Auto-generated method stub
 
 						nextCamera.setHeading(Angle.zero());
-
-						if (nextCamera.getGeodeticCenterOfView().isNan()) {
-							nextCamera.setGeodeticPosition(new Geodetic2D(
-									latitudeA, longitudeA), nextCamera
-									.getGeodeticPosition()._height);
-
-						}
+					
+					
 						if (nextCamera.getGeodeticPosition()._height > maxZoomIn2D) {
 							nextCamera.setGeodeticPosition(
 									new Geodetic2D(Angle.zero(), Angle.zero()),
 									maxZoomIn2D);
 						}
-
+						
+						 
+						
 						return false;
 					}
+				
 
 					@Override
 					public void dispose() {
@@ -590,6 +604,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 				builder.setPlanet(Planet.createSphericalEarth());
 				builder.getPlanetRendererBuilder().setLayerSet(layerset);
 			
+
 				addMarkerPosition();
 				_g3mWidget = builder.createWidget();
 				// activeUpdateIconWhenTouch();
@@ -606,20 +621,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 			break;
 		case R.id.switchAddPosition: {
 
-			if (!isMarkerPositionActivated) {
-
-				isMarkerPositionActivated = true;
-				if(mode3DActivated)
-				userMarkers3D.setEnable(true);
-				else 	userMarkers2D.setEnable(true);
-
-			} else {
-				isMarkerPositionActivated = false;
-				if(mode3DActivated)
-					userMarkers3D.setEnable(false);
-					else 	userMarkers2D.setEnable(false);
-
-			}
+			gTask.run(_g3mWidget.getG3MContext());
 		}
 			break;
 		default:
@@ -645,8 +647,7 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 	}
 
 	private void addMarkerPosition() {
-		userMarkers2D = new MarksRenderer(true);
-		userMarkers3D = new MarksRenderer(true);
+		userMarkers = new MarksRenderer(false);
 		Geodetic2D position = null;
 		if (userLocation != null) {
 
@@ -661,22 +662,14 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 					.show();
 
 		}
-		userMarkers2D.addMark(new Mark(yourPoisiton, //
+		userMarkers.addMark(new Mark(yourPoisiton, //
 				new URL(markerUrl, false), //
 				new Geodetic3D(position, 0), //
 				AltitudeMode.RELATIVE_TO_GROUND, 0, //
 				true, //
 				14));
-		builder.addRenderer(userMarkers2D);
-		userMarkers2D.setEnable(false);
-		userMarkers3D.addMark(new Mark(yourPoisiton, //
-				new URL(markerUrl, false), //
-				new Geodetic3D(position, 0), //
-				AltitudeMode.RELATIVE_TO_GROUND, 0, //
-				true, //
-				14));
-		builder.addRenderer(userMarkers3D);
-		userMarkers3D.setEnable(false);
+		builder.addRenderer(userMarkers);
+		userMarkers.setEnable(false);
 
 	}
 
@@ -703,5 +696,22 @@ public class MainActivity extends RoboActivity implements ITextViewListener {
 
 		}
 	}
+	
+	GTask gTask= new GTask() {
+		
+		@Override
+		public void run(G3MContext context) {
+			// TODO Auto-generated method stub
+			if (isMarkerPositionActivated) {
+				userMarkers.setEnable(false);
+				isMarkerPositionActivated = false;
+				
+			}else {
+				userMarkers.setEnable(true);
+				isMarkerPositionActivated = true;
+			}
+			
+		}
+	};
 
 }
